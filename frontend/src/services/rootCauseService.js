@@ -1,60 +1,47 @@
 import api from './api';
 
-// GET - Root cause tree
-export const getRootCauseTree = async (problemId) => {
-    try {
+/**
+ * Root Cause Service
+ * Handles all root cause analysis API operations
+ */
+export const rootCauseService = {
+    /**
+     * Get root cause tree for a problem
+     * @param {number} problemId - Problem ID
+     * @returns {Promise<Array>}
+     */
+    getTree: async (problemId) => {
         const response = await api.get(`/root_causes.php?problem_id=${problemId}`);
-        // API directly returns array, no .data wrapper
-        return Array.isArray(response) ? response : (response.data || []);
-    } catch (error) {
-        console.error('Error fetching root cause tree:', error);
-        throw error;
-    }
+        return Array.isArray(response) ? response : [];
+    },
+
+    /**
+     * Add new root cause
+     * @param {Object} data - Root cause data
+     * @returns {Promise<Object>}
+     */
+    add: (data) => api.post('/root_causes.php', data),
+
+    /**
+     * Update root cause
+     * @param {number} id - Root cause ID
+     * @param {Object} data - Updated data
+     * @returns {Promise<Object>}
+     */
+    update: (id, data) => api.put('/root_causes.php', { id, ...data }),
+
+    /**
+     * Delete root cause
+     * @param {number} id - Root cause ID
+     * @returns {Promise<Object>}
+     */
+    delete: (id) => api.delete(`/root_causes.php?id=${id}`),
 };
 
-// POST - Add new root cause
-export const addRootCause = async (data) => {
-    try {
-        const response = await api.post('/root_causes.php', data);
-        // API returns { success, id, message }
-        return response;
-    } catch (error) {
-        console.error('Error adding root cause:', error);
-        throw error;
-    }
-};
+// Named exports for backward compatibility
+export const getRootCauseTree = (problemId) => rootCauseService.getTree(problemId);
+export const addRootCause = (data) => rootCauseService.add(data);
+export const updateRootCause = (id, data) => rootCauseService.update(id, data);
+export const deleteRootCause = (id) => rootCauseService.delete(id);
 
-// PUT - Update root cause
-export const updateRootCause = async (id, data) => {
-    try {
-        console.log('updateRootCause service called:', { id, data }); // Debug
-        
-        // ✅ ID'yi data içine ekle
-        const payload = {
-            id: id,
-            ...data
-        };
-        
-        console.log('Sending payload:', payload); // Debug
-        
-        const response = await api.put('/root_causes.php', payload);
-        
-        console.log('Update response:', response); // Debug
-        
-        return response;
-    } catch (error) {
-        console.error('Error updating root cause:', error);
-        throw error;
-    }
-};
-
-// DELETE - Delete root cause
-export const deleteRootCause = async (id) => {
-    try {
-        const response = await api.delete(`/root_causes.php?id=${id}`);
-        return response;
-    } catch (error) {
-        console.error('Error deleting root cause:', error);
-        throw error;
-    }
-};
+export default rootCauseService;

@@ -1,116 +1,111 @@
-export const API_URL = 'http://localhost/8d-projects/backend/api';
+/**
+ * API Service
+ * Centralized API communication layer
+ * Clean Architecture - Single Responsibility
+ */
 
-// API Helper Object
-const api = {
-    get: async (url) => {
-        try {
-            const response = await fetch(API_URL + url, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            });
-            
-            if (!response.ok) {
-                const data = await response.json();
-                throw new Error(data.error || 'API request failed');
-            }
-            
-            return await response.json();
-        } catch (error) {
-            console.error('API GET Error:', error);
-            throw error;
-        }
-    },
-    
-    post: async (url, data) => {
-        try {
-            const response = await fetch(API_URL + url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data)
-            });
-            
-            if (!response.ok) {
-                const responseData = await response.json();
-                throw new Error(responseData.error || 'API request failed');
-            }
-            
-            return await response.json();
-        } catch (error) {
-            console.error('API POST Error:', error);
-            throw error;
-        }
-    },
-    
-    put: async (url, data) => {
-        try {
-            const response = await fetch(API_URL + url, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data)
-            });
-            
-            if (!response.ok) {
-                const responseData = await response.json();
-                throw new Error(responseData.error || 'API request failed');
-            }
-            
-            return await response.json();
-        } catch (error) {
-            console.error('API PUT Error:', error);
-            throw error;
-        }
-    },
-    
-    delete: async (url) => {
-        try {
-            const response = await fetch(API_URL + url, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            });
-            
-            if (!response.ok) {
-                const data = await response.json();
-                throw new Error(data.error || 'API request failed');
-            }
-            
-            return await response.json();
-        } catch (error) {
-            console.error('API DELETE Error:', error);
-            throw error;
-        }
+const API_URL = 'http://localhost/8d-projects/backend/api';
+
+/**
+ * Custom API Error class for better error handling
+ */
+class ApiError extends Error {
+    constructor(message, status) {
+        super(message);
+        this.name = 'ApiError';
+        this.status = status;
     }
-};
+}
 
-export default api;
+/**
+ * API Service class - singleton pattern
+ */
+class ApiService {
+    constructor(baseUrl) {
+        this.baseUrl = baseUrl;
+    }
 
-// Ortak Fetch Fonksiyonu (backward compatibility)
-export const apiRequest = async (url, options = {}) => {
-    try {
-        const response = await fetch(url, {
+    /**
+     * Core request method
+     * @param {string} endpoint - API endpoint
+     * @param {Object} options - Fetch options
+     * @returns {Promise<any>} Response data
+     */
+    async request(endpoint, options = {}) {
+        const url = `${this.baseUrl}${endpoint}`;
+        const config = {
             headers: {
                 'Content-Type': 'application/json',
-                ...options.headers,
             },
             ...options,
-        });
-        
-        const data = await response.json();
-        
-        if (!response.ok) {
-            throw new Error(data.error || 'API request failed');
+        };
+
+        try {
+            const response = await fetch(url, config);
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new ApiError(data.error || 'API request failed', response.status);
+            }
+
+            return data;
+        } catch (error) {
+            if (error instanceof ApiError) {
+                console.error(`API Error [${error.status}]:`, error.message);
+                throw error;
+            }
+            console.error('Network Error:', error.message);
+            throw new ApiError(error.message, 0);
         }
-        
-        return data;
-    } catch (error) {
-        console.error('API Error:', error);
-        throw error;
     }
-};
+
+    /**
+     * GET request
+     * @param {string} endpoint - API endpoint
+     * @returns {Promise<any>}
+     */
+    get(endpoint) {
+        return this.request(endpoint, { method: 'GET' });
+    }
+
+    /**
+     * POST request
+     * @param {string} endpoint - API endpoint
+     * @param {Object} data - Request body
+     * @returns {Promise<any>}
+     */
+    post(endpoint, data) {
+        return this.request(endpoint, {
+            method: 'POST',
+            body: JSON.stringify(data),
+        });
+    }
+
+    /**
+     * PUT request
+     * @param {string} endpoint - API endpoint
+     * @param {Object} data - Request body
+     * @returns {Promise<any>}
+     */
+    put(endpoint, data) {
+        return this.request(endpoint, {
+            method: 'PUT',
+            body: JSON.stringify(data),
+        });
+    }
+
+    /**
+     * DELETE request
+     * @param {string} endpoint - API endpoint
+     * @returns {Promise<any>}
+     */
+    delete(endpoint) {
+        return this.request(endpoint, { method: 'DELETE' });
+    }
+}
+
+// Singleton instance
+const api = new ApiService(API_URL);
+
+export { api, ApiError, API_URL };
+export default api;

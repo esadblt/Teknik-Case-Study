@@ -28,7 +28,15 @@ const AppLayout = ({ children }) => {
 
   return (
     <IxApplication>
-      <IxApplicationHeader name="8D Problem Solving">
+      <IxApplicationHeader 
+        name="8D Problem Solving"
+      >
+        <img 
+          slot="logo" 
+          src="/siemens-ag-logo.svg" 
+          alt="Siemens Logo"
+          style={{ height: '32px' }}
+        />
       </IxApplicationHeader>
 
       <IxMenu>

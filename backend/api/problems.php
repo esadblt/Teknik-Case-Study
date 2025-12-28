@@ -1,67 +1,31 @@
 <?php
-// CORS Headers - Allow multiple origins
-$allowedOrigins = ['http://localhost:5173', 'http://localhost:5174'];
-$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+/**
+ * Problems API
+ * Handles CRUD operations for problems
+ */
 
-if (in_array($origin, $allowedOrigins)) {
-    header("Access-Control-Allow-Origin: $origin");
-} else {
-    header("Access-Control-Allow-Origin: http://localhost:5173");
-}
-header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
-header("Content-Type: application/json; charset=UTF-8");
-
-// Preflight
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit();
-}
-
+require_once '../config/cors.php';
+require_once '../config/helpers.php';
 require_once '../config/database.php';
+
+// Initialize CORS
+handleCors();
 
 $database = new Database();
 $db = $database->connect();
 
 $method = $_SERVER['REQUEST_METHOD'];
 
-// ✅ Input validation helper
-function validateInput($data, $field, $type = 'string') {
-    if (!isset($data[$field])) {
-        return null;
-    }
-    
-    $value = $data[$field];
-    
-    switch($type) {
-        case 'string':
-            return htmlspecialchars(strip_tags(trim($value)), ENT_QUOTES, 'UTF-8');
-        case 'int':
-            $filtered = filter_var($value, FILTER_VALIDATE_INT);
-            return $filtered !== false ? $filtered : null;
-        case 'email':
-            return filter_var($value, FILTER_VALIDATE_EMAIL) ?: null;
-        case 'date':
-            $date = DateTime::createFromFormat('Y-m-d', $value);
-            return $date ? $date->format('Y-m-d') : null;
-        default:
-            return $value;
-    }
-}
-
 try {
     switch($method) {
         // ===== GET - Tüm problemleri getir =====
         case 'GET':
             if (isset($_GET['id'])) {
-                // ✅ Tek problem getir - Prepared Statement
+                // Tek problem getir
                 $id = filter_var($_GET['id'], FILTER_VALIDATE_INT);
                 
-                // ✅ BURADA KONTROL EDİYORUZ
                 if ($id === false || $id === null || $id <= 0) {
-                    http_response_code(400);
-                    echo json_encode(['error' => 'Invalid ID']);
-                    exit();
+                    errorResponse('Invalid ID', 400);
                 }
                 
                 $stmt = $db->prepare("SELECT * FROM problems WHERE id = ?");
@@ -69,31 +33,23 @@ try {
                 $problem = $stmt->fetch();
                 
                 if ($problem) {
-                    echo json_encode($problem);
+                    jsonResponse($problem);
                 } else {
-                    http_response_code(404);
-                    echo json_encode(['error' => 'Problem not found']);
+                    errorResponse('Problem not found', 404);
                 }
             } else {
-                // ✅ Tüm problemleri getir
+                // Tüm problemleri getir
                 $stmt = $db->query("SELECT * FROM problems ORDER BY created_at DESC");
                 $problems = $stmt->fetchAll();
-                echo json_encode($problems);
+                jsonResponse($problems);
             }
             break;
             
         // ===== POST - Yeni problem ekle =====
         case 'POST':
-            $rawData = file_get_contents("php://input");
-            $data = json_decode($rawData, true);
+            $data = getJsonInput();
             
-            if (!$data) {
-                http_response_code(400);
-                echo json_encode(['error' => 'Invalid JSON']);
-                exit();
-            }
-            
-            // ✅ Input validation
+            // Input validation
             $title = validateInput($data, 'title', 'string');
             $description = validateInput($data, 'description', 'string');
             $responsible_person = validateInput($data, 'responsible_person', 'string');
@@ -101,25 +57,21 @@ try {
             $deadline = validateInput($data, 'deadline', 'date');
             $status = validateInput($data, 'status', 'string') ?? 'OPEN';
             
-            // ✅ Required field check
+            // Required field check
             if (empty($title)) {
-                http_response_code(400);
-                echo json_encode(['error' => 'Title is required']);
-                exit();
+                errorResponse('Title is required', 400);
             }
             
             if (empty($responsible_person)) {
-                http_response_code(400);
-                echo json_encode(['error' => 'Responsible person is required']);
-                exit();
+                errorResponse('Responsible person is required', 400);
             }
             
-            // ✅ Status validation
+            // Status validation
             if (!in_array($status, ['OPEN', 'CLOSED'])) {
                 $status = 'OPEN';
             }
             
-            // ✅ Prepared Statement ile INSERT
+            // INSERT
             $stmt = $db->prepare("
                 INSERT INTO problems 
                 (title, description, responsible_person, team, deadline, status, created_at) 
@@ -136,12 +88,11 @@ try {
             ]);
             
             if ($result) {
-                http_response_code(201);
-                echo json_encode([
+                jsonResponse([
                     'success' => true,
                     'id' => $db->lastInsertId(),
                     'message' => 'Problem created successfully'
-                ]);
+                ], 201);
             } else {
                 throw new Exception('Failed to create problem');
             }
@@ -149,35 +100,23 @@ try {
             
         // ===== PUT - Problem güncelle =====
         case 'PUT':
-            $rawData = file_get_contents("php://input");
-            $data = json_decode($rawData, true);
-            
-            if (!$data) {
-                http_response_code(400);
-                echo json_encode(['error' => 'Invalid JSON']);
-                exit();
-            }
+            $data = getJsonInput();
             
             $id = validateInput($data, 'id', 'int');
             
-            // ✅ ID kontrolü
             if (!$id || $id <= 0) {
-                http_response_code(400);
-                echo json_encode(['error' => 'Invalid ID']);
-                exit();
+                errorResponse('Invalid ID', 400);
             }
             
-            // ✅ Önce problemin var olup olmadığını kontrol et
+            // Problemin var olup olmadığını kontrol et
             $checkStmt = $db->prepare("SELECT id FROM problems WHERE id = ?");
             $checkStmt->execute([$id]);
             
             if (!$checkStmt->fetch()) {
-                http_response_code(404);
-                echo json_encode(['error' => 'Problem not found']);
-                exit();
+                errorResponse('Problem not found', 404);
             }
             
-            // ✅ Güncelleme verileri
+            // Güncelleme verileri
             $title = validateInput($data, 'title', 'string');
             $description = validateInput($data, 'description', 'string');
             $responsible_person = validateInput($data, 'responsible_person', 'string');
@@ -185,14 +124,12 @@ try {
             $deadline = validateInput($data, 'deadline', 'date');
             $status = validateInput($data, 'status', 'string');
             
-            // ✅ Status validation
+            // Status validation
             if ($status && !in_array($status, ['OPEN', 'CLOSED'])) {
-                http_response_code(400);
-                echo json_encode(['error' => 'Invalid status. Must be OPEN or CLOSED']);
-                exit();
+                errorResponse('Invalid status. Must be OPEN or CLOSED', 400);
             }
             
-            // ✅ Prepared Statement ile UPDATE
+            // UPDATE
             $stmt = $db->prepare("
                 UPDATE problems 
                 SET title = ?, 
@@ -215,7 +152,7 @@ try {
             ]);
             
             if ($result) {
-                echo json_encode([
+                jsonResponse([
                     'success' => true,
                     'message' => 'Problem updated successfully'
                 ]);
@@ -228,29 +165,24 @@ try {
         case 'DELETE':
             $id = filter_var($_GET['id'] ?? null, FILTER_VALIDATE_INT);
             
-            // ✅ ID kontrolü
             if ($id === false || $id === null || $id <= 0) {
-                http_response_code(400);
-                echo json_encode(['error' => 'Invalid ID']);
-                exit();
+                errorResponse('Invalid ID', 400);
             }
             
-            // ✅ Önce problemin var olup olmadığını kontrol et
+            // Problemin var olup olmadığını kontrol et
             $checkStmt = $db->prepare("SELECT id FROM problems WHERE id = ?");
             $checkStmt->execute([$id]);
             
             if (!$checkStmt->fetch()) {
-                http_response_code(404);
-                echo json_encode(['error' => 'Problem not found']);
-                exit();
+                errorResponse('Problem not found', 404);
             }
             
-            // ✅ Prepared Statement ile DELETE
+            // DELETE
             $stmt = $db->prepare("DELETE FROM problems WHERE id = ?");
             $result = $stmt->execute([$id]);
             
             if ($result) {
-                echo json_encode([
+                jsonResponse([
                     'success' => true,
                     'message' => 'Problem deleted successfully'
                 ]);
@@ -259,28 +191,16 @@ try {
             }
             break;
             
-        // ===== Diğer method'lar =====
         default:
-            http_response_code(405);
-            echo json_encode(['error' => 'Method not allowed']);
+            errorResponse('Method not allowed', 405);
             break;
     }
     
 } catch(PDOException $e) {
     error_log("Database Error: " . $e->getMessage());
-    http_response_code(500);
-    echo json_encode([
-        'error' => 'Database error occurred'
-        // Production'da detay gösterme:
-        // 'details' => $e->getMessage()
-    ]);
+    errorResponse('Database error occurred', 500);
 } catch(Exception $e) {
     error_log("Error: " . $e->getMessage());
-    http_response_code(500);
-    echo json_encode([
-        'error' => 'An error occurred'
-        // Production'da detay gösterme:
-        // 'details' => $e->getMessage()
-    ]);
+    errorResponse('An error occurred', 500);
 }
 ?>

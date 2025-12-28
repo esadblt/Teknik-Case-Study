@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { IxButton, IxModalHeader, IxModalContent, IxModalFooter, IxInput, IxTextarea, IxSelect, IxSelectItem, IxDateInput, Modal, showModal } from '@siemens/ix-react';
+import { IxButton, IxModalHeader, IxModalContent, IxModalFooter, IxInput, IxTextarea, IxDateInput, Modal, showModal } from '@siemens/ix-react';
 import './ProblemModal.css';
 
 /**
@@ -115,22 +115,11 @@ const ModalContent = ({ onClose, onSubmit, initialData }) => {
                         />
                     </div>
 
-                    <div className="ix-form__row">
-                        <IxSelect
-                            label="Durum"
-                            value={formData.status}
-                            onValueChange={(e) => handleChange('status', e.detail)}
-                        >
-                            <IxSelectItem value="OPEN" label="Açık" />
-                            <IxSelectItem value="CLOSED" label="Kapalı" />
-                        </IxSelect>
-
-                        <IxDateInput
-                            label="Termin Tarihi"
-                            value={formData.deadline}
-                            onValueChange={(e) => handleChange('deadline', e.detail)}
-                        />
-                    </div>
+                    <IxDateInput
+                        label="Termin Tarihi"
+                        value={formData.deadline}
+                        onValueChange={(e) => handleChange('deadline', e.detail)}
+                    />
                 </form>
             </IxModalContent>
             

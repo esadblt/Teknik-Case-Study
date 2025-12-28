@@ -254,22 +254,6 @@ const ProblemDetail = () => {
                                 </IxCol>
                             </IxRow>
 
-                            {/* D3: Containment Actions */}
-                            <IxRow className="mt-3">
-                                <IxCol>
-                                    <IxCard variant="filled">
-                                        <IxCardContent>
-                                            <div className="card-title-row">
-                                                <span className="eight-d-badge">D3</span>
-                                                <IxTypography format="h4">Geçici Önlemler</IxTypography>
-                                            </div>
-                                            <IxTypography format="body" color="soft">
-                                                <em>Henüz geçici önlem tanımlanmamış.</em>
-                                            </IxTypography>
-                                        </IxCardContent>
-                                    </IxCard>
-                                </IxCol>
-                            </IxRow>
                         </IxLayoutGrid>
                     </div>
                 )}
@@ -287,7 +271,7 @@ const ProblemDetail = () => {
                                 <h2 className="section-title">5 Neden Analizi (Why-Why)</h2>
                                 <p className="section-description">
                                     Her "Neden?" sorusuna yanıt vererek kök nedene ulaşın. 
-                                    Kök nedeni bulduğunuzda işaretleyin ve kalıcı çözümü tanımlayın.
+                                    Kök nedeni bulduğunuzda işaretleyin ave kalıcı çözümü tanımlayın.
                                 </p>
                             </div>
                             

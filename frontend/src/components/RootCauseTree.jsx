@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { IxIcon, IxInput, IxButton, IxSpinner, IxMessageBar } from '@siemens/ix-react';
-import { iconBulb, iconRocket, iconInfo } from '@siemens/ix-icons/icons';
+import { iconBulb, iconRocket } from '@siemens/ix-icons/icons';
 import { getRootCauseTree, addRootCause, updateRootCause, deleteRootCause } from '../services/rootCauseService';
 import { useAlert } from '../hooks/useAlert';
 import TreeNode from './TreeNode';
@@ -342,7 +342,8 @@ const RootCauseTree = ({ problemId, problemTitle, onStatusChange }) => {
      */
     const findRootCauseNode = (nodes) => {
         for (const node of nodes) {
-            if (node.isRootCause) return node;
+            // Check both camelCase and snake_case (API returns snake_case)
+            if (node.isRootCause || Boolean(Number(node.is_root_cause))) return node;
             if (node.children?.length > 0) {
                 const found = findRootCauseNode(node.children);
                 if (found) return found;
@@ -372,7 +373,7 @@ const RootCauseTree = ({ problemId, problemTitle, onStatusChange }) => {
                     <div className="stat-item">
                         <span className="stat-label">Kök Neden</span>
                         <span className={`stat-value ${rootCauseNode ? 'stat-value--success' : 'stat-value--warning'}`}>
-                            {rootCauseNode ? '✓ Belirlendi' : 'Bekliyor'}
+                            {rootCauseNode ? 'Belirlendi' : 'Bekliyor'}
                         </span>
                     </div>
                 </div>
@@ -380,9 +381,9 @@ const RootCauseTree = ({ problemId, problemTitle, onStatusChange }) => {
 
             {/* Loading State */}
             {isLoading && (
-                <div className="loading-container" role="status" aria-live="polite">
+                <div className="loading-state loading-container" role="status" aria-live="polite">
                     <IxSpinner size="large"></IxSpinner>
-                    <span className="loading-text">Ağaç yükleniyor...</span>
+                    <span className="loading-state__text">Ağaç yükleniyor...</span>
                 </div>
             )}
 
@@ -453,22 +454,6 @@ const RootCauseTree = ({ problemId, problemTitle, onStatusChange }) => {
                 </div>
             )}
 
-            {/* Help Section */}
-            {childNodes.length > 0 && !rootCauseNode && (
-                <aside className="help-section" role="complementary">
-                    <h4 className="help-title">
-                        <IxIcon name={iconInfo} size="20"></IxIcon>
-                        5 Neden Analizi Nasıl Yapılır?
-                    </h4>
-                    <ol className="help-list">
-                        <li>Her nedene "Neden bu oluyor?" sorusunu sorun</li>
-                        <li>Yanıtı alt neden olarak ekleyin</li>
-                        <li>Bu işlemi 5 kez tekrarlayın</li>
-                        <li>Gerçek kök nedeni bulduğunuzda işaretleyin</li>
-                        <li>Kök neden için kalıcı çözüm tanımlayın</li>
-                    </ol>
-                </aside>
-            )}
         </div>
     );
 };

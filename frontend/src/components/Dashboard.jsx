@@ -3,15 +3,28 @@ import { useNavigate } from 'react-router-dom';
 import { AgGridReact } from 'ag-grid-react';
 import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
 import { IxPill, IxButton, IxSpinner, IxMessageBar, IxContentHeader } from '@siemens/ix-react';
+import { themeSwitcher } from '@siemens/ix';
+import { getIxTheme } from '@siemens/ix-aggrid';
+import * as agGrid from 'ag-grid-community';
 import { getProblems, createProblem } from '../services/problemService';
 import ProblemModal from './ProblemModal';
 import { showToast } from '../utils/toast';
 
 import 'ag-grid-community/styles/ag-grid.css';
-import 'ag-grid-community/styles/ag-theme-quartz.css';
 import './Dashboard.css';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
+
+// Siemens IX AG Grid Theme
+const ixTheme = getIxTheme(agGrid);
+
+/**
+ * Get current IX theme variant (dark/light)
+ */
+const getCurrentThemeVariant = () => {
+    const isDark = themeSwitcher.getCurrentTheme()?.includes('dark') ?? true;
+    return isDark ? 'dark' : 'light';
+};
 
 /**
  * Status Badge Component for AG Grid using IX Pill
@@ -153,7 +166,7 @@ const Dashboard = () => {
             </div>
 
             {isLoading && (
-                <div className="loading-container">
+                <div className="loading-state loading-container">
                     <IxSpinner size="large"></IxSpinner>
                 </div>
             )}
@@ -165,14 +178,14 @@ const Dashboard = () => {
             )}
 
             {!isLoading && !error && (
-                <div className="ag-theme-quartz dashboard-table">
+                <div className="dashboard-table">
                     <AgGridReact
                         rowData={rowData}
                         columnDefs={colDefs}
                         pagination={true}
                         paginationPageSize={10}
                         paginationPageSizeSelector={[10, 20, 50, 100]}
-                        theme="legacy"
+                        theme={ixTheme}
                         domLayout="normal"
                         onRowClicked={handleRowClick}
                         rowSelection="single"

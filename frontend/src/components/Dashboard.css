@@ -33,18 +33,7 @@
     top: 0;
 }
 
-/* ✅ Accessibility: Visually hidden but screen reader accessible */
-.visually-hidden {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    padding: 0;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
-}
+/* Skip link uses utilities.css .skip-link */
 
 /* ✅ Accessibility: Focus indicators */
 ix-button:focus,
@@ -70,11 +59,9 @@ ix-button {
     border: var(--theme-soft-bdr-1);
 }
 
-/* ✅ Accessibility: Loading state */
+/* ✅ Accessibility: Loading state - uses .loading-state from utilities.css */
+/* Custom styles only */
 .loading-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     padding: 40px;
 }
 
