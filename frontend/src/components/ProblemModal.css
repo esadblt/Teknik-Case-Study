@@ -1,0 +1,80 @@
+/**
+ * Siemens IX Design System - Modal Form Styles
+ * Layout styling for IX Modal form components
+ */
+
+/* Modal Content Padding */
+ix-modal ix-modal-content {
+    padding: 24px 28px !important;
+}
+
+ix-modal ix-modal-footer {
+    padding: 16px 28px 24px !important;
+}
+
+/* Form Layout */
+.ix-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.ix-form__row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+@media (max-width: 480px) {
+    .ix-form__row {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* IX Input Full Width */
+.ix-form ix-input,
+.ix-form ix-textarea,
+.ix-form ix-select,
+.ix-form ix-date-input {
+    width: 100%;
+    display: block;
+}
+
+/* Input içindeki native input */
+.ix-form ix-input input,
+.ix-form input {
+    width: 100% !important;
+    min-width: 100% !important;
+    box-sizing: border-box;
+}
+
+/* Textarea Full Width */
+.ix-form ix-textarea {
+    width: 100%;
+}
+
+.ix-form ix-textarea textarea {
+    width: 100% !important;
+    min-width: 100% !important;
+    min-height: 120px;
+    box-sizing: border-box;
+    resize: vertical;
+}
+
+/* Select Full Width */
+.ix-form ix-select {
+    width: 100%;
+}
+
+/* Date Input Full Width */
+.ix-form ix-date-input {
+    width: 100%;
+}
+
+/* Label Spacing */
+.ix-form ix-input,
+.ix-form ix-textarea,
+.ix-form ix-select,
+.ix-form ix-date-input {
+    --ix-input-label-margin-bottom: 8px;
+}

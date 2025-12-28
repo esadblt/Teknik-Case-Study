@@ -1,0 +1,109 @@
+/**
+ * Siemens IX Button Override Styles
+ * Based on: https://ix.siemens.io/docs/styles/animation
+ * Timing: default-time (150ms), medium-time (300ms)
+ */
+
+/* ============================================
+   IX BUTTON HOVER & ACTIVE EFFECTS
+   Uses IX Animation timing variables
+   ============================================ */
+
+/* Primary Button Hover */
+ix-button[variant="primary"] {
+    transition: transform var(--theme-default-time) ease-out, filter var(--theme-default-time) ease-out;
+}
+
+ix-button[variant="primary"]:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.05);
+}
+
+ix-button[variant="primary"]:active {
+    transform: translateY(0) scale(0.98);
+}
+
+/* Secondary Button Hover */
+ix-button[variant="secondary"] {
+    transition: transform var(--theme-default-time) ease-out;
+}
+
+ix-button[variant="secondary"]:hover {
+    transform: translateY(-1px);
+}
+
+ix-button[variant="secondary"]:active {
+    transform: translateY(0) scale(0.98);
+}
+
+/* Icon Button Hover */
+ix-icon-button {
+    transition: transform var(--theme-default-time) ease-out;
+}
+
+ix-icon-button:hover {
+    transform: scale(1.05);
+}
+
+ix-icon-button:active {
+    transform: scale(0.95);
+}
+
+/* ============================================
+   IX BUTTON FOCUS STYLING
+   Uses IX focus border color variable
+   ============================================ */
+
+ix-button:focus-visible,
+ix-icon-button:focus-visible {
+    outline: 2px solid var(--theme-color-focus-bdr);
+    outline-offset: 2px;
+}
+
+/* ============================================
+   REDUCED MOTION SUPPORT
+   https://ix.siemens.io/docs/styles/animation
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+    ix-button,
+    ix-icon-button {
+        transition: none;
+    }
+}
+
+/* ============================================
+   IX TEXTAREA FULL WIDTH OVERRIDE
+   ============================================ */
+ix-textarea {
+    width: 100%;
+    display: block;
+}
+
+ix-textarea textarea {
+    width: 100% !important;
+    min-width: 100% !important;
+    min-height: 100px;
+    box-sizing: border-box;
+}
+
+/* ============================================
+   IX INPUT FULL WIDTH OVERRIDE
+   ============================================ */
+ix-input {
+    width: 100%;
+    display: block;
+}
+
+ix-input input {
+    width: 100% !important;
+    box-sizing: border-box;
+}
+
+/* ============================================
+   IX SELECT & DATE INPUT FULL WIDTH
+   ============================================ */
+ix-select,
+ix-date-input {
+    width: 100%;
+    display: block;
+}

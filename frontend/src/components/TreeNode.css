@@ -1,0 +1,313 @@
+/**
+ * TreeNode Component Styles
+ * Siemens IX Design System
+ * Colors: https://ix.siemens.io/docs/styles/colors
+ * Borders: https://ix.siemens.io/docs/styles/borders
+ * Shadows: https://ix.siemens.io/docs/styles/shadows
+ * Animation: https://ix.siemens.io/docs/styles/animation
+ */
+
+/* Tree Node Wrapper */
+.tree-node-wrapper {
+    margin-bottom: 8px;
+}
+
+/* Main Node Container - IX Card Style */
+.tree-node {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    background: var(--theme-color-2);
+    border-radius: 12px;
+    border: var(--theme-soft-bdr-1);
+    border-left: 4px solid var(--theme-color-primary);
+    transition: all var(--theme-default-time) ease-out;
+    flex-wrap: wrap;
+    min-width: 0;
+    box-shadow: var(--theme-shadow-1);
+}
+
+.tree-node:hover {
+    background: var(--theme-color-component-1);
+    transform: translateX(4px);
+    box-shadow: var(--theme-shadow-2);
+    border-color: var(--theme-color-primary);
+}
+
+.tree-node--root-cause {
+    border-left-color: var(--theme-color-success);
+    background: var(--theme-color-success-10);
+    border: var(--theme-success-bdr-1);
+    border-left: 4px solid var(--theme-color-success);
+}
+
+.tree-node--root-cause:hover {
+    background: var(--theme-color-success-40);
+}
+
+/* Spacer */
+.tree-node__spacer {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+}
+
+/* Level Badge - IX Pill Style */
+.tree-node__badge {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--theme-color-primary);
+    color: var(--theme-color-inv-contrast-text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    flex-shrink: 0;
+    box-shadow: var(--theme-shadow-1);
+}
+
+.tree-node__badge--root {
+    background: var(--theme-color-success);
+    box-shadow: var(--theme-shadow-1);
+    border-radius: 8px;
+}
+
+/* Description */
+.tree-node__description {
+    flex: 1;
+    font-weight: 500;
+    color: var(--theme-color-std-text);
+    word-break: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    min-width: 0;
+    line-height: 1.5;
+    font-size: 14px;
+}
+
+/* Actions Container */
+.tree-node__actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+}
+
+/* Checkbox - replaced with IX Toggle */
+.tree-node__toggle-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--theme-color-soft-text);
+    padding: 6px 12px;
+    border-radius: 10px;
+    background: var(--theme-color-2);
+}
+
+.tree-node__toggle-label {
+    color: var(--theme-color-soft-text);
+    font-size: 13px;
+}
+
+/* Input Container */
+.tree-node__input-container {
+    margin-top: 12px;
+    margin-left: 40px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+    animation: fadeIn var(--theme-default-time) ease-out;
+}
+
+.tree-node__input-actions {
+    display: flex;
+    gap: 8px;
+}
+
+/* Action Plan - IX Card Style */
+.tree-node__action-plan {
+    margin-top: 16px;
+    margin-left: 44px;
+    padding: 24px;
+    background: var(--theme-color-2);
+    border-radius: 12px;
+    border: var(--theme-warning-bdr-1);
+    border-left: 4px solid var(--theme-color-warning);
+    animation: fadeIn var(--theme-medium-time) ease-out;
+    box-shadow: var(--theme-shadow-1);
+    width: calc(100% - 44px);
+    box-sizing: border-box;
+}
+
+.tree-node__action-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    color: var(--theme-color-warning);
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.tree-node__action-header ix-icon {
+    color: var(--theme-color-warning);
+}
+
+.tree-node__action-view {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 20px;
+    background: var(--theme-color-1);
+    border-radius: 8px;
+    border: var(--theme-soft-bdr-1);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.tree-node__action-text {
+    flex: 1;
+    margin: 0;
+    color: var(--theme-color-std-text);
+    line-height: 1.6;
+    word-break: break-word;
+    font-size: 14px;
+}
+
+.tree-node__action-edit {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+}
+
+/* Textarea Wrapper - Full Width */
+.tree-node__textarea-wrapper {
+    width: 100%;
+}
+
+.tree-node__textarea-wrapper ix-textarea {
+    width: 100%;
+    display: block;
+}
+
+/* IX Textarea içindeki native textarea */
+.tree-node__textarea-wrapper ix-textarea textarea,
+.tree-node__textarea-wrapper textarea {
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    min-height: 120px;
+    resize: vertical;
+    box-sizing: border-box;
+}
+
+.tree-node__action-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+/* Children Container - Visual Hierarchy */
+.tree-node__children {
+    margin-top: 12px;
+    padding-left: 16px;
+    margin-left: 16px;
+    border-left: 2px solid var(--theme-color-component-1);
+}
+
+/* Animations - IX Design System timing */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .tree-node,
+    .tree-node__action-plan,
+    .tree-node__input-container {
+        transition: none;
+        animation: none;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .tree-node {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    
+    .tree-node__description {
+        width: 100%;
+    }
+    
+    .tree-node__actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+    
+    .tree-node__input-container {
+        margin-left: 0;
+        width: 100%;
+    }
+    
+    .tree-node__action-plan {
+        margin-left: 0;
+        width: 100%;
+    }
+    
+    .tree-node__action-view {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .tree-node__action-view ix-button {
+        width: 100%;
+    }
+}
+
+/* ============================================
+   IX BUTTON OVERRIDES FOR TREE NODE
+   ============================================ */
+
+/* Neden? Button - Primary */
+.tree-node__actions ix-button[variant="primary"] {
+    --ix-button-height: 34px;
+    --ix-button-padding-x: 16px;
+    --ix-button-font-size: 13px;
+    --ix-button-border-radius: 12px;
+}
+
+.tree-node__actions ix-button {
+    --ix-button-height: 36px;
+}
+
+.tree-node__input-actions ix-button {
+    --ix-button-height: 40px;
+}
+
+.tree-node__action-buttons ix-button {
+    --ix-button-height: 42px;
+}
+
+/* Toggle Wrapper - Kaldırıldı, artık IxCheckbox kullanıyoruz */
+
+/* Checkbox stilleri */
+.tree-node__actions ix-checkbox {
+    --ix-checkbox-label-color: var(--theme-color-soft-text);
+}

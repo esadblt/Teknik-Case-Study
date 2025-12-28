@@ -1,0 +1,86 @@
+/**
+ * Global Styles - Siemens IX Design System
+ * Colors: https://ix.siemens.io/docs/styles/colors
+ * Animation: https://ix.siemens.io/docs/styles/animation
+ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: var(--theme-color-primary);
+  text-decoration: inherit;
+  transition: color var(--theme-default-time) ease-out;
+}
+a:hover {
+  color: var(--theme-color-dynamic);
+}
+a:focus-visible {
+  outline: 2px solid var(--theme-color-focus-bdr);
+  outline-offset: 2px;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: var(--theme-color-1);
+    color: var(--theme-color-std-text);
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+  color: var(--theme-color-std-text);
+}
+
+button {
+  border-radius: 8px;
+  border: var(--theme-std-bdr-1);
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: var(--theme-color-component-1);
+  color: var(--theme-color-std-text);
+  cursor: pointer;
+  transition: all var(--theme-default-time) ease-out;
+}
+button:hover {
+  background-color: var(--theme-color-component-2);
+}
+button:focus-visible {
+  outline: 2px solid var(--theme-color-focus-bdr);
+  outline-offset: 2px;
+}
+
+/* Reduced motion support - IX Design System */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: var(--theme-short-time) !important;
+    transition-duration: var(--theme-short-time) !important;
+  }
+}

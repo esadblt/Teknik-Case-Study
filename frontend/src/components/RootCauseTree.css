@@ -1,0 +1,207 @@
+/**
+ * RootCauseTree Component Styles
+ * Siemens IX Design System
+ * Colors: https://ix.siemens.io/docs/styles/colors
+ * Borders: https://ix.siemens.io/docs/styles/borders
+ * Shadows: https://ix.siemens.io/docs/styles/shadows
+ */
+
+.root-cause-container {
+    background: var(--theme-color-1);
+    border-radius: 12px;
+    padding: 24px;
+}
+
+/* Stats Bar - IX Card Style */
+.root-cause-stats {
+    display: flex;
+    gap: 32px;
+    padding: 20px 24px;
+    background: var(--theme-color-2);
+    border-radius: 12px;
+    margin-bottom: 24px;
+    border: var(--theme-soft-bdr-1);
+    box-shadow: var(--theme-shadow-1);
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-right: 32px;
+    border-right: var(--theme-soft-bdr-1);
+}
+
+.stat-item:last-child {
+    border-right: none;
+    padding-right: 0;
+}
+
+.stat-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--theme-color-soft-text);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+.stat-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--theme-color-std-text);
+}
+
+.stat-value--success {
+    color: var(--theme-color-success);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.stat-value--success::before {
+    content: '✓';
+    font-size: 14px;
+}
+
+.stat-value--warning {
+    color: var(--theme-color-warning);
+}
+
+/* Loading */
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    gap: 16px;
+}
+
+.loading-text {
+    color: var(--theme-color-soft-text);
+    font-size: 14px;
+}
+
+/* Error */
+.error-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+/* Root Input Section - IX Empty State Style */
+.root-input-section {
+    padding: 32px;
+    background: var(--theme-color-2);
+    border-radius: 12px;
+    border: 2px dashed var(--theme-color-soft-bdr);
+    text-align: center;
+}
+
+.input-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.input-header ix-icon {
+    color: var(--theme-color-primary);
+    flex-shrink: 0;
+}
+
+.input-label {
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--theme-color-std-text);
+    margin-bottom: 4px;
+}
+
+.input-hint {
+    font-size: 13px;
+    color: var(--theme-color-soft-text);
+    margin: 0;
+    line-height: 1.5;
+}
+
+.input-wrapper {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+/* Tree Container */
+.tree-container {
+    margin-bottom: 24px;
+}
+
+/* Help Section - IX Info Card */
+.help-section {
+    margin-top: 24px;
+    padding: 20px 24px;
+    background: var(--theme-color-info-10);
+    border-radius: 12px;
+    border: var(--theme-info-bdr-1);
+    border-left: 4px solid var(--theme-color-info);
+}
+
+.help-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 16px 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--theme-color-info);
+}
+
+.help-list {
+    margin: 0;
+    padding-left: 24px;
+    color: var(--theme-color-std-text);
+    line-height: 2;
+    font-size: 13px;
+}
+
+.help-list li {
+    margin-bottom: 4px;
+}
+
+/* Visually Hidden */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .root-cause-stats {
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+    .input-wrapper {
+        flex-direction: column;
+    }
+
+    .input-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .root-input {
+        transition: none;
+    }
+}
