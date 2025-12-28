@@ -1,0 +1,712 @@
+.dashboard-container {
+    padding: 20px;
+    height: 100%;
+}
+
+/* Dashboard Header - Title + Button */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 16px;
+}
+
+.dashboard-header ix-content-header {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+/* ✅ Accessibility: Skip link */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--theme-color-contrast-text);
+    color: var(--theme-color-inv-contrast-text);
+    padding: 8px;
+    text-decoration: none;
+    z-index: 100;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+/* Skip link uses utilities.css .skip-link */
+
+/* ✅ Accessibility: Focus indicators */
+ix-button:focus,
+button:focus,
+a:focus {
+    outline: 3px solid var(--theme-color-focus-bdr);
+    outline-offset: 2px;
+}
+
+/* ✅ Accessibility: Touch target size (min 44x44px) */
+ix-button {
+    min-height: 44px;
+    min-width: 44px;
+}
+
+/* =====================================================
+   AG Grid - Siemens IX Design System Customization
+   ===================================================== */
+
+/* AG Grid Container */
+.dashboard-table {
+    width: 100%;
+    height: 600px;
+    background: var(--theme-color-1);
+    border-radius: 12px;
+    padding: 0;
+    box-shadow: var(--theme-shadow-2);
+    border: 1px solid var(--theme-color-soft-bdr);
+    overflow: hidden;
+}
+
+/* Root Wrapper */
+.ag-theme-ix-custom .ag-root-wrapper,
+.ag-root-wrapper {
+    border-radius: 12px !important;
+    border: none !important;
+    background: var(--theme-color-1) !important;
+}
+
+/* ===== HEADER STYLES ===== */
+.ag-header {
+    background: linear-gradient(180deg,
+            var(--theme-color-2) 0%,
+            var(--theme-color-component-1) 100%) !important;
+    border-bottom: 2px solid var(--theme-color-primary) !important;
+    font-weight: 600 !important;
+}
+
+.ag-header-row {
+    height: 52px !important;
+}
+
+.ag-header-cell {
+    padding: 0 16px !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    color: var(--theme-color-std-text) !important;
+    border-right: 1px solid var(--theme-color-soft-bdr) !important;
+}
+
+.ag-header-cell:last-child {
+    border-right: none !important;
+}
+
+.ag-header-cell:hover {
+    background: var(--theme-color-ghost--hover) !important;
+}
+
+.ag-header-cell-label {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+/* Header Icon (Sort, Filter) */
+.ag-header-icon {
+    color: var(--theme-color-primary) !important;
+}
+
+.ag-icon-asc,
+.ag-icon-desc {
+    color: var(--theme-color-primary) !important;
+}
+
+/* Filter Icon */
+.ag-header-cell-filtered .ag-icon-filter {
+    color: var(--theme-color-success) !important;
+}
+
+/* ===== ROW STYLES ===== */
+.ag-row {
+    border-bottom: 1px solid var(--theme-color-weak-bdr) !important;
+    transition: background-color 0.15s ease-out !important;
+}
+
+.ag-row-even {
+    background: var(--theme-color-1) !important;
+}
+
+.ag-row-odd {
+    background: var(--theme-color-component-1) !important;
+}
+
+/* Row Hover */
+.ag-row:hover,
+.ag-row-hover {
+    background: var(--theme-color-ghost-primary) !important;
+}
+
+/* Row Selected */
+.ag-row-selected {
+    background: var(--theme-color-primary--active) !important;
+    border-left: 3px solid var(--theme-color-primary) !important;
+}
+
+.ag-row-selected::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--theme-color-primary);
+}
+
+/* Clickable Row */
+.clickable-row {
+    cursor: pointer !important;
+}
+
+.clickable-row:hover {
+    background: var(--theme-color-ghost-primary) !important;
+    transform: translateX(2px);
+}
+
+.clickable-row:focus {
+    outline: 2px solid var(--theme-color-focus-bdr) !important;
+    outline-offset: -2px !important;
+}
+
+/* ===== CELL STYLES ===== */
+.ag-cell {
+    padding: 0 16px !important;
+    font-size: 14px !important;
+    color: var(--theme-color-std-text) !important;
+    display: flex !important;
+    align-items: center !important;
+    border-right: 1px solid var(--theme-color-weak-bdr) !important;
+}
+
+.ag-cell:last-child {
+    border-right: none !important;
+}
+
+.ag-cell-focus {
+    border: 2px solid var(--theme-color-focus-bdr) !important;
+    outline: none !important;
+}
+
+/* ===== PAGINATION STYLES ===== */
+.ag-paging-panel {
+    background: var(--theme-color-2) !important;
+    border-top: 1px solid var(--theme-color-soft-bdr) !important;
+    padding: 12px 16px !important;
+    color: var(--theme-color-std-text) !important;
+    font-size: 13px !important;
+    height: 52px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+}
+
+.ag-paging-row-summary-panel {
+    color: var(--theme-color-soft-text) !important;
+}
+
+.ag-paging-page-summary-panel {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+/* Pagination Buttons */
+.ag-paging-button {
+    background: var(--theme-color-component-1) !important;
+    border: 1px solid var(--theme-color-soft-bdr) !important;
+    border-radius: 6px !important;
+    color: var(--theme-color-std-text) !important;
+    min-width: 36px !important;
+    min-height: 36px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    transition: all 0.15s ease-out !important;
+}
+
+.ag-paging-button:hover:not(.ag-disabled) {
+    background: var(--theme-color-primary) !important;
+    color: var(--theme-color-primary--contrast) !important;
+    border-color: var(--theme-color-primary) !important;
+}
+
+.ag-paging-button.ag-disabled {
+    opacity: 0.4 !important;
+    cursor: not-allowed !important;
+}
+
+/* Page Size Selector */
+.ag-paging-page-size .ag-picker-field-wrapper {
+    background: var(--theme-color-component-1) !important;
+    border: 1px solid var(--theme-color-soft-bdr) !important;
+    border-radius: 6px !important;
+    min-height: 36px !important;
+    padding: 0 12px !important;
+}
+
+.ag-paging-page-size .ag-picker-field-wrapper:hover {
+    border-color: var(--theme-color-primary) !important;
+}
+
+/* ===== SCROLLBAR STYLES ===== */
+.ag-body-horizontal-scroll-viewport,
+.ag-body-vertical-scroll-viewport {
+    scrollbar-width: thin;
+    scrollbar-color: var(--theme-color-soft-bdr) transparent;
+}
+
+.ag-body-horizontal-scroll-viewport::-webkit-scrollbar,
+.ag-body-vertical-scroll-viewport::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.ag-body-horizontal-scroll-viewport::-webkit-scrollbar-track,
+.ag-body-vertical-scroll-viewport::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.ag-body-horizontal-scroll-viewport::-webkit-scrollbar-thumb,
+.ag-body-vertical-scroll-viewport::-webkit-scrollbar-thumb {
+    background: var(--theme-color-soft-bdr);
+    border-radius: 4px;
+}
+
+.ag-body-horizontal-scroll-viewport::-webkit-scrollbar-thumb:hover,
+.ag-body-vertical-scroll-viewport::-webkit-scrollbar-thumb:hover {
+    background: var(--theme-color-primary);
+}
+
+/* ===== NO ROWS OVERLAY ===== */
+.ag-overlay-no-rows-center {
+    color: var(--theme-color-soft-text) !important;
+    font-size: 16px !important;
+    padding: 40px !important;
+}
+
+/* ===== LOADING OVERLAY ===== */
+.ag-overlay-loading-center {
+    background: var(--theme-color-1) !important;
+    border-radius: 8px !important;
+    padding: 20px 40px !important;
+    box-shadow: var(--theme-shadow-2) !important;
+}
+
+/* ===== FILTER POPUP ===== */
+.ag-filter {
+    background: var(--theme-color-2) !important;
+    border: 1px solid var(--theme-color-soft-bdr) !important;
+    border-radius: 8px !important;
+    box-shadow: var(--theme-shadow-3) !important;
+}
+
+.ag-filter-body-wrapper {
+    padding: 16px !important;
+}
+
+.ag-filter input[type="text"] {
+    background: var(--theme-color-component-1) !important;
+    border: 1px solid var(--theme-color-soft-bdr) !important;
+    border-radius: 6px !important;
+    color: var(--theme-color-std-text) !important;
+    padding: 8px 12px !important;
+}
+
+.ag-filter input[type="text"]:focus {
+    border-color: var(--theme-color-primary) !important;
+    outline: none !important;
+}
+
+/* ===== COLUMN RESIZE ===== */
+.ag-header-cell-resize {
+    width: 8px !important;
+}
+
+.ag-header-cell-resize::after {
+    background: var(--theme-color-primary) !important;
+    opacity: 0;
+    transition: opacity 0.15s ease-out;
+}
+
+.ag-header-cell:hover .ag-header-cell-resize::after {
+    opacity: 1;
+}
+
+/* ===== HIGH CONTRAST MODE ===== */
+@media (prefers-contrast: high) {
+    .ag-header {
+        border-bottom: 3px solid var(--theme-color-primary) !important;
+    }
+
+    .ag-row {
+        border-bottom: 2px solid var(--theme-color-contrast-bdr) !important;
+    }
+
+    .ag-cell {
+        border-right: 2px solid var(--theme-color-contrast-bdr) !important;
+    }
+}
+
+/* ===== REDUCED MOTION ===== */
+@media (prefers-reduced-motion: reduce) {
+
+    .ag-row,
+    .clickable-row,
+    .ag-paging-button {
+        transition: none !important;
+    }
+}
+
+/* =====================================================
+   Toast Notification Styles
+   ===================================================== */
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 400px;
+}
+
+.toast {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: 8px;
+    background: var(--theme-color-2);
+    box-shadow: var(--theme-shadow-4);
+    transform: translateX(120%);
+    opacity: 0;
+    transition: transform var(--theme-medium-time) ease-out, opacity var(--theme-medium-time) ease-out;
+    min-width: 280px;
+    border: var(--theme-soft-bdr-1);
+}
+
+.toast--visible {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.toast--hiding {
+    transform: translateX(120%);
+    opacity: 0;
+}
+
+.toast--success {
+    border-left: 4px solid var(--theme-color-success);
+}
+
+.toast--success .toast__icon {
+    color: var(--theme-color-success);
+}
+
+.toast--error {
+    border-left: 4px solid var(--theme-color-alarm);
+}
+
+.toast--error .toast__icon {
+    color: var(--theme-color-alarm);
+}
+
+.toast--warning {
+    border-left: 4px solid var(--theme-color-warning);
+}
+
+.toast--warning .toast__icon {
+    color: var(--theme-color-warning);
+}
+
+.toast--info {
+    border-left: 4px solid var(--theme-color-info);
+}
+
+.toast--info .toast__icon {
+    color: var(--theme-color-info);
+}
+
+.toast__icon {
+    font-size: 18px;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.toast__message {
+    flex: 1;
+    font-size: 14px;
+    color: var(--theme-color-std-text);
+    line-height: 1.4;
+}
+
+.toast__close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: var(--theme-color-soft-text);
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: background-color var(--theme-default-time) ease-out;
+}
+
+.toast__close:hover {
+    background-color: var(--theme-color-ghost);
+}
+
+.toast__close:focus {
+    outline: 2px solid var(--theme-color-focus-bdr);
+    outline-offset: 2px;
+}
+
+/* ✅ Reduced motion support for toasts */
+@media (prefers-reduced-motion: reduce) {
+    .toast {
+        transition: none;
+    }
+}
+
+/* =====================================================
+   RESPONSIVE DESIGN - Siemens IX Mobile Guidelines
+   Breakpoints: lg (62em), md (48em), sm (36em)
+   ===================================================== */
+
+/* Medium screens (tablets) - max-width: 48em (768px) */
+@media screen and (max-width: 768px) {
+    .dashboard-container {
+        padding: 16px;
+    }
+
+    .dashboard-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .dashboard-header ix-content-header {
+        text-align: center;
+    }
+
+    .dashboard-header ix-button {
+        width: 100%;
+    }
+
+    .dashboard-table {
+        height: 450px;
+        border-radius: 8px;
+    }
+
+    /* AG Grid Mobile Adjustments */
+    .ag-header-cell {
+        padding: 0 8px !important;
+        font-size: 11px !important;
+        letter-spacing: 0.3px !important;
+    }
+
+    .ag-cell {
+        padding: 0 8px !important;
+        font-size: 13px !important;
+    }
+
+    .ag-header-row {
+        height: 44px !important;
+    }
+
+    .ag-paging-panel {
+        padding: 8px 12px !important;
+        height: auto !important;
+        flex-wrap: wrap;
+        gap: 8px !important;
+    }
+
+    .ag-paging-button {
+        min-width: 32px !important;
+        min-height: 32px !important;
+    }
+
+    /* Toast adjustments */
+    .toast-container {
+        left: 16px;
+        right: 16px;
+        max-width: none;
+    }
+
+    .toast {
+        min-width: auto;
+    }
+}
+
+/* Small screens (mobile phones) - max-width: 36em (576px) */
+@media screen and (max-width: 576px) {
+    .dashboard-container {
+        padding: 12px;
+    }
+
+    .dashboard-header {
+        gap: 8px;
+    }
+
+    .dashboard-table {
+        height: 400px;
+        border-radius: 6px;
+    }
+
+    /* AG Grid Mobile - Hide less important columns */
+    .ag-header-cell {
+        padding: 0 6px !important;
+        font-size: 10px !important;
+        text-transform: none !important;
+    }
+
+    .ag-cell {
+        padding: 0 6px !important;
+        font-size: 12px !important;
+    }
+
+    /* Pagination simplified */
+    .ag-paging-panel {
+        justify-content: center !important;
+        padding: 8px !important;
+    }
+
+    .ag-paging-row-summary-panel {
+        display: none !important;
+    }
+
+    .ag-paging-page-size {
+        display: none !important;
+    }
+
+    /* Toast full width */
+    .toast-container {
+        left: 8px;
+        right: 8px;
+        top: 8px;
+    }
+
+    .toast {
+        padding: 12px;
+    }
+}
+
+/* Landscape mode adjustments */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+    .dashboard-container {
+        padding: 8px;
+    }
+
+    .dashboard-table {
+        height: calc(100vh - 150px);
+    }
+
+    .dashboard-header {
+        flex-direction: row;
+        margin-bottom: 8px;
+    }
+}
+
+/* =====================================================
+   TOUCH DEVICE OPTIMIZATIONS
+   ===================================================== */
+
+/* Touch target sizes (min 44x44px as per WCAG) */
+@media (pointer: coarse) {
+    .ag-cell {
+        min-height: 48px !important;
+    }
+
+    .ag-header-cell {
+        min-height: 48px !important;
+    }
+
+    .clickable-row {
+        min-height: 52px !important;
+    }
+
+    .ag-paging-button {
+        min-width: 44px !important;
+        min-height: 44px !important;
+    }
+
+    /* Larger touch targets for buttons */
+    ix-button {
+        min-height: 48px !important;
+        padding: 12px 20px !important;
+    }
+
+    /* Remove hover effects on touch devices */
+    .ag-row:hover {
+        background: inherit !important;
+    }
+
+    .clickable-row:hover {
+        transform: none !important;
+    }
+
+    /* Active state instead of hover */
+    .clickable-row:active {
+        background: var(--theme-color-ghost-primary) !important;
+    }
+}
+
+/* =====================================================
+   SAFE AREA INSETS (for notched devices)
+   ===================================================== */
+
+@supports (padding: env(safe-area-inset-top)) {
+    .dashboard-container {
+        padding-left: max(16px, env(safe-area-inset-left));
+        padding-right: max(16px, env(safe-area-inset-right));
+        padding-bottom: max(16px, env(safe-area-inset-bottom));
+    }
+
+    .toast-container {
+        top: max(20px, env(safe-area-inset-top));
+        right: max(20px, env(safe-area-inset-right));
+    }
+}
+
+/* =====================================================
+   PRINT STYLES
+   ===================================================== */
+
+@media print {
+    .dashboard-header ix-button {
+        display: none !important;
+    }
+
+    .ag-paging-panel {
+        display: none !important;
+    }
+
+    .toast-container {
+        display: none !important;
+    }
+
+    .dashboard-table {
+        height: auto !important;
+        box-shadow: none !important;
+        border: 1px solid #000 !important;
+    }
+
+    .ag-row {
+        break-inside: avoid;
+    }
+}

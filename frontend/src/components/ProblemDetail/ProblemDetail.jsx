@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { IxIcon, IxPill, IxButton, IxSpinner, IxMessageBar, IxContentHeader, IxTabs, IxTabItem, IxCard, IxCardContent, IxTypography, IxLayoutGrid, IxRow, IxCol } from '@siemens/ix-react';
+import { IxIcon, IxPill, IxButton, IxSpinner, IxMessageBar, IxContentHeader, IxTabs, IxTabItem, IxCard, IxCardContent, IxTypography, IxLayoutGrid, IxRow, IxCol, IxTooltip } from '@siemens/ix-react';
 import { iconArrowLeft, iconPen, iconClock } from '@siemens/ix-icons/icons';
-import { getProblem, updateProblem } from '../services/problemService';
-import RootCauseTree from './RootCauseTree';
-import ProblemModal from './ProblemModal';
-import { showToast } from '../utils/toast';
+import { getProblem, updateProblem } from '../../services/problemService';
+import RootCauseTree from '../RootCauseTree/RootCauseTree';
+import ProblemModal from '../ProblemModal/ProblemModal';
+import { showToast } from '../../utils/toast';
+import { announcePolitely, announceAssertively } from '../../utils/accessibility';
 import './ProblemDetail.css';
 
 /**
@@ -18,7 +19,7 @@ import './ProblemDetail.css';
 const ProblemDetail = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    
+
     const [problem, setProblem] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -32,10 +33,13 @@ const ProblemDetail = () => {
         try {
             setIsLoading(true);
             setError(null);
+            announcePolitely('Problem detayı yükleniyor...');
             const data = await getProblem(id);
             setProblem(data);
+            announcePolitely(`Problem "${data.title}" yüklendi`);
         } catch (err) {
             setError('Problem yüklenirken bir hata oluştu.');
+            announceAssertively('Hata: Problem yüklenemedi');
             console.error('Problem yükleme hatası:', err);
         } finally {
             setIsLoading(false);
@@ -55,9 +59,11 @@ const ProblemDetail = () => {
             setIsEditModalOpen(false);
             loadProblem();
             showToast('Problem başarıyla güncellendi', 'success');
+            announcePolitely('Problem başarıyla güncellendi');
         } catch (err) {
             console.error('Güncelleme hatası:', err);
             showToast('Güncelleme sırasında bir hata oluştu', 'error');
+            announceAssertively('Hata: Problem güncellenemedi');
         }
     };
 
@@ -84,7 +90,7 @@ const ProblemDetail = () => {
      * Get status display properties
      */
     const getStatusInfo = (status) => {
-        return status === 'OPEN' 
+        return status === 'OPEN'
             ? { text: 'Açık', className: 'status--open' }
             : { text: 'Kapalı', className: 'status--closed' };
     };
@@ -93,9 +99,10 @@ const ProblemDetail = () => {
     if (isLoading) {
         return (
             <div className="problem-detail" role="main" aria-busy="true">
-                <div className="loading-container">
-                    <IxSpinner size="large"></IxSpinner>
+                <div className="loading-container" role="status" aria-live="polite">
+                    <IxSpinner size="large" aria-hidden="true"></IxSpinner>
                     <p className="loading-text">Problem yükleniyor...</p>
+                    <span className="visually-hidden">Problem detayları yükleniyor, lütfen bekleyin</span>
                 </div>
             </div>
         );
@@ -105,14 +112,14 @@ const ProblemDetail = () => {
     if (error) {
         return (
             <div className="problem-detail" role="main">
-                <IxMessageBar type="danger">
+                <IxMessageBar type="danger" role="alert" aria-live="assertive">
                     {error}
                 </IxMessageBar>
                 <div className="error-actions">
-                    <IxButton variant="secondary" onClick={handleBack}>
+                    <IxButton variant="secondary" onClick={handleBack} aria-label="Dashboard'a geri dön">
                         Geri Dön
                     </IxButton>
-                    <IxButton variant="primary" onClick={loadProblem}>
+                    <IxButton variant="primary" onClick={loadProblem} aria-label="Problemi tekrar yülemeyi dene">
                         Tekrar Dene
                     </IxButton>
                 </div>
@@ -145,18 +152,22 @@ const ProblemDetail = () => {
                 hasBackButton
                 onBackButtonClick={handleBack}
             >
-                <IxPill 
+                <IxPill
                     slot="header-actions"
                     variant={problem.status === 'OPEN' ? 'alarm' : 'success'}
+                    aria-label={`Problem durumu: ${statusInfo.text}`}
                 >
                     {statusInfo.text}
                 </IxPill>
-                <IxButton 
+                <IxButton
+                    id="edit-problem-btn"
                     slot="header-actions"
                     variant="primary"
                     onClick={() => setIsEditModalOpen(true)}
+                    aria-label="Problemi düzenle"
+                    title="Problem bilgilerini düzenlemek için tıklayın"
                 >
-                    <IxIcon name={iconPen} slot="start"></IxIcon>
+                    <IxIcon name={iconPen} slot="start" aria-hidden="true"></IxIcon>
                     Düzenle
                 </IxButton>
             </IxContentHeader>
@@ -164,13 +175,13 @@ const ProblemDetail = () => {
             {/* Tab Navigation with IX Tabs */}
             <div className="tabs-wrapper">
                 <IxTabs>
-                    <IxTabItem 
+                    <IxTabItem
                         selected={activeTab === 'overview'}
                         onClick={() => setActiveTab('overview')}
                     >
                         Genel Bakış
                     </IxTabItem>
-                    <IxTabItem 
+                    <IxTabItem
                         selected={activeTab === 'root-cause'}
                         onClick={() => setActiveTab('root-cause')}
                     >
@@ -183,8 +194,8 @@ const ProblemDetail = () => {
             <div className="problem-detail__content">
                 {/* Overview Tab */}
                 {activeTab === 'overview' && (
-                    <div 
-                        id="tab-overview" 
+                    <div
+                        id="tab-overview"
                         role="tabpanel"
                         aria-labelledby="tab-overview"
                         className="tab-panel"
@@ -260,8 +271,8 @@ const ProblemDetail = () => {
 
                 {/* Root Cause Analysis Tab */}
                 {activeTab === 'root-cause' && (
-                    <div 
-                        id="tab-root-cause" 
+                    <div
+                        id="tab-root-cause"
                         role="tabpanel"
                         aria-labelledby="tab-root-cause"
                         className="tab-panel"
@@ -270,13 +281,13 @@ const ProblemDetail = () => {
                             <div className="section-header">
                                 <h2 className="section-title">5 Neden Analizi (Why-Why)</h2>
                                 <p className="section-description">
-                                    Her "Neden?" sorusuna yanıt vererek kök nedene ulaşın. 
+                                    Her "Neden?" sorusuna yanıt vererek kök nedene ulaşın.
                                     Kök nedeni bulduğunuzda işaretleyin ave kalıcı çözümü tanımlayın.
                                 </p>
                             </div>
-                            
-                            <RootCauseTree 
-                                problemId={parseInt(id)} 
+
+                            <RootCauseTree
+                                problemId={parseInt(id)}
                                 problemTitle={problem.title}
                                 onStatusChange={loadProblem}
                             />

@@ -84,3 +84,69 @@ button:focus-visible {
     transition-duration: var(--theme-short-time) !important;
   }
 }
+
+/* =============================================
+   ACCESSIBILITY UTILITIES - Siemens IX Guide
+   ============================================= */
+
+/**
+ * Skip Link - For keyboard navigation
+ * Allows users to skip to main content
+ */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  z-index: 10000;
+  padding: 1rem 1.5rem;
+  background-color: var(--theme-color-primary);
+  color: var(--theme-color-primary--contrast);
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 0 0 8px 0;
+  transition: top 0.2s ease-out;
+}
+
+.skip-link:focus {
+  top: 0;
+  outline: 2px solid var(--theme-color-focus-bdr);
+  outline-offset: 2px;
+}
+
+/**
+ * Visually Hidden - For screen readers only
+ * Content is hidden visually but readable by assistive technologies
+ */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/**
+ * Focus visible styles - Enhanced for accessibility
+ */
+:focus-visible {
+  outline: 2px solid var(--theme-color-focus-bdr);
+  outline-offset: 2px;
+}
+
+/**
+ * High contrast mode support
+ */
+@media (forced-colors: active) {
+  .skip-link {
+    border: 2px solid currentColor;
+  }
+  
+  button,
+  [role="button"] {
+    border: 1px solid currentColor;
+  }
+}

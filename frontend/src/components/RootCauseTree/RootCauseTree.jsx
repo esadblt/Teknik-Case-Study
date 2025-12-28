@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { IxIcon, IxInput, IxButton, IxSpinner, IxMessageBar } from '@siemens/ix-react';
 import { iconBulb, iconRocket } from '@siemens/ix-icons/icons';
-import { getRootCauseTree, addRootCause, updateRootCause, deleteRootCause } from '../services/rootCauseService';
-import { useAlert } from '../hooks/useAlert';
-import TreeNode from './TreeNode';
+import { getRootCauseTree, addRootCause, updateRootCause, deleteRootCause } from '../../services/rootCauseService';
+import { useAlert } from '../../hooks/useAlert';
+import { announcePolitely } from '../../utils/accessibility';
+import TreeNode from '../TreeNode/TreeNode';
 import './RootCauseTree.css';
 
 /**
@@ -30,12 +31,15 @@ const RootCauseTree = ({ problemId, problemTitle, onStatusChange }) => {
      */
     const loadTree = useCallback(async () => {
         if (!problemId) return;
-        
+
         try {
             setIsLoading(true);
             setError(null);
             const tree = await getRootCauseTree(problemId);
             setChildNodes(tree || []);
+            if (tree && tree.length > 0) {
+                announcePolitely(`Kök neden ağacı yüklendi. ${tree.length} ana düğüm mevcut.`);
+            }
         } catch (err) {
             console.error('Kök neden ağacı yükleme hatası:', err);
             setError('Kök neden ağacı yüklenirken hata oluştu');
@@ -60,7 +64,7 @@ const RootCauseTree = ({ problemId, problemTitle, onStatusChange }) => {
      */
     const handleAddRootCause = async () => {
         console.log('handleAddRootCause called with:', rootCause);
-        
+
         if (!rootCause.trim()) {
             showAlert('Lütfen kök neden giriniz', 'error');
             return;
@@ -77,15 +81,15 @@ const RootCauseTree = ({ problemId, problemTitle, onStatusChange }) => {
         if (problemId) {
             try {
                 console.log('Adding root cause to backend, problemId:', problemId);
-                
+
                 const response = await addRootCause({
                     problem_id: problemId,
                     parent_id: null,
                     description: rootCause
                 });
-                
+
                 console.log('Root cause added successfully:', response);
-                
+
                 await loadTree();
                 showAlert('Analiz başlatıldı', 'polite');
                 setRootCause('');
@@ -176,7 +180,7 @@ const RootCauseTree = ({ problemId, problemTitle, onStatusChange }) => {
                     }
                     return null;
                 };
-                
+
                 const targetNode = findNode(childNodes);
                 if (targetNode) {
                     const response = await updateRootCause(nodeId, {
@@ -184,7 +188,7 @@ const RootCauseTree = ({ problemId, problemTitle, onStatusChange }) => {
                         description: targetNode.description || targetNode.text,
                         action_plan: targetNode.action_plan || targetNode.action || ''
                     });
-                    
+
                     // Problem durumu değiştiyse parent'a haber ver
                     if (response.problem_status_updated && onStatusChange) {
                         onStatusChange();
@@ -212,9 +216,9 @@ const RootCauseTree = ({ problemId, problemTitle, onStatusChange }) => {
                     };
                 });
             };
-            
+
             setChildNodes(markNode(childNodes));
-            
+
             if (newValue) {
                 showAlert('Kök neden işaretlendi - Şimdi kalıcı çözüm tanımlayın', 'polite');
             } else {
@@ -242,9 +246,9 @@ const RootCauseTree = ({ problemId, problemTitle, onStatusChange }) => {
                 }
                 return null;
             };
-            
+
             const targetNode = findNode(childNodes);
-            
+
             if (targetNode && problemId) {
                 const isRootCause = targetNode.is_root_cause || targetNode.isRootCause;
                 if (isRootCause) {
@@ -254,7 +258,7 @@ const RootCauseTree = ({ problemId, problemTitle, onStatusChange }) => {
                         description: targetNode.description || targetNode.text,
                         action_plan: action
                     });
-                    
+
                     // Problem durumu değiştiyse parent'a haber ver
                     if (response.problem_status_updated && onStatusChange) {
                         onStatusChange();
@@ -264,7 +268,7 @@ const RootCauseTree = ({ problemId, problemTitle, onStatusChange }) => {
                     }
                 }
             }
-            
+
             // Local state'i güncelle
             const updateAction = (nodes) => {
                 return nodes.map(node => {
@@ -278,7 +282,7 @@ const RootCauseTree = ({ problemId, problemTitle, onStatusChange }) => {
                 });
             };
             setChildNodes(updateAction(childNodes));
-            
+
         } catch (err) {
             console.error('Action change error:', err);
             throw err; // Hatayı yukarı fırlat ki TreeNode yakalasın
@@ -290,13 +294,13 @@ const RootCauseTree = ({ problemId, problemTitle, onStatusChange }) => {
      */
     const handleDeleteNode = async (nodeId) => {
         console.log('handleDeleteNode called with nodeId:', nodeId);
-        
+
         if (problemId) {
             try {
                 console.log('Deleting from backend...');
                 const response = await deleteRootCause(nodeId);
                 console.log('Delete response:', response);
-                
+
                 await loadTree();
                 showAlert('Neden silindi', 'polite');
             } catch (err) {
@@ -382,18 +386,18 @@ const RootCauseTree = ({ problemId, problemTitle, onStatusChange }) => {
             {/* Loading State */}
             {isLoading && (
                 <div className="loading-state loading-container" role="status" aria-live="polite">
-                    <IxSpinner size="large"></IxSpinner>
+                    <IxSpinner size="large" aria-hidden="true"></IxSpinner>
                     <span className="loading-state__text">Ağaç yükleniyor...</span>
                 </div>
             )}
 
             {/* Error State */}
             {error && (
-                <div className="error-container">
+                <div className="error-container" role="alert" aria-live="assertive">
                     <IxMessageBar type="danger">
                         {error}
                     </IxMessageBar>
-                    <IxButton variant="secondary" onClick={loadTree}>
+                    <IxButton variant="secondary" onClick={loadTree} aria-label="Kök neden ağacını tekrar yülemeyi dene">
                         Tekrar Dene
                     </IxButton>
                 </div>
@@ -421,12 +425,13 @@ const RootCauseTree = ({ problemId, problemTitle, onStatusChange }) => {
                             placeholder="Örnek: Makine Durdu, Kalite Problemi, Üretim Gecikmesi"
                             style={{ flex: 1 }}
                         />
-                        <IxButton 
-                            variant="primary" 
+                        <IxButton
+                            variant="primary"
                             onClick={handleAddRootCause}
                             disabled={!rootCause.trim() || isSubmitting}
+                            aria-label="5 Neden analizini başlat"
                         >
-                            <IxIcon name={iconRocket} slot="start"></IxIcon>
+                            <IxIcon name={iconRocket} slot="start" aria-hidden="true"></IxIcon>
                             {isSubmitting ? 'Başlatılıyor...' : 'Analizi Başlat'}
                         </IxButton>
                     </div>
@@ -435,14 +440,14 @@ const RootCauseTree = ({ problemId, problemTitle, onStatusChange }) => {
 
             {/* Tree Visualization */}
             {!isLoading && !error && childNodes.length > 0 && (
-                <div 
-                    className="tree-container" 
-                    role="tree" 
+                <div
+                    className="tree-container"
+                    role="tree"
                     aria-label="Kök neden ağacı"
                 >
                     {childNodes.map(node => (
-                        <TreeNode 
-                            key={node.id} 
+                        <TreeNode
+                            key={node.id}
                             node={node}
                             level={0}
                             onAddChild={handleAddChildNode}

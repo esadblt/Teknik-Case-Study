@@ -15,3 +15,19 @@ ix-application {
 ix-content {
   overflow-y: auto;
 }
+
+/* Theme Toggle Button - Remove gray background */
+#theme-toggle {
+  --ix-icon-button-color: var(--theme-color-std-text);
+  border: none !important;
+  background: transparent !important;
+}
+
+#theme-toggle:hover {
+  background: var(--theme-color-ghost--hover) !important;
+}
+
+/* Ensure proper theme colors in header */
+ix-application-header {
+  --ix-application-header-background: var(--theme-color-1);
+}

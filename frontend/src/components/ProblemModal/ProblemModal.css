@@ -78,3 +78,67 @@ ix-modal ix-modal-footer {
 .ix-form ix-date-input {
     --ix-input-label-margin-bottom: 8px;
 }
+
+/* Field Hint Container */
+.ix-form__field-hint {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.ix-form__field-hint ix-date-input {
+    width: 100%;
+}
+
+.field-hint-text {
+    font-size: 12px;
+    color: var(--theme-color-soft-text);
+    margin-top: 4px;
+    padding-left: 2px;
+}
+
+/* =====================================================
+   RESPONSIVE MODAL STYLES
+   ===================================================== */
+
+@media (max-width: 768px) {
+    ix-modal {
+        --ix-modal-width: 95vw !important;
+    }
+
+    ix-modal ix-modal-content {
+        padding: 16px !important;
+    }
+
+    ix-modal ix-modal-footer {
+        padding: 12px 16px 16px !important;
+    }
+
+    .ix-form {
+        gap: 16px;
+    }
+
+    .ix-form__row {
+        gap: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    ix-modal ix-modal-content {
+        padding: 12px !important;
+    }
+
+    ix-modal ix-modal-footer {
+        padding: 12px !important;
+        flex-direction: column-reverse;
+        gap: 8px;
+    }
+
+    ix-modal ix-modal-footer ix-button {
+        width: 100%;
+    }
+
+    .ix-form {
+        gap: 12px;
+    }
+}

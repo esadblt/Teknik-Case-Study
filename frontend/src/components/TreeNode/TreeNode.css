@@ -35,15 +35,18 @@
     border-color: var(--theme-color-primary);
 }
 
+/* Root Cause Node - Using IX Success color for identified root cause */
 .tree-node--root-cause {
     border-left-color: var(--theme-color-success);
-    background: var(--theme-color-success-10);
-    border: var(--theme-success-bdr-1);
+    background: var(--theme-color-component-1);
+    border: 1px solid var(--theme-color-success);
     border-left: 4px solid var(--theme-color-success);
+    box-shadow: 0 0 0 1px var(--theme-color-success), var(--theme-shadow-1);
 }
 
 .tree-node--root-cause:hover {
-    background: var(--theme-color-success-40);
+    background: var(--theme-color-ghost-primary--hover);
+    box-shadow: 0 0 0 2px var(--theme-color-success), var(--theme-shadow-2);
 }
 
 /* Spacer */
@@ -69,8 +72,10 @@
     box-shadow: var(--theme-shadow-1);
 }
 
+/* Root cause badge - IX Success color */
 .tree-node__badge--root {
     background: var(--theme-color-success);
+    color: var(--theme-color-success--contrast);
     box-shadow: var(--theme-shadow-1);
     border-radius: 8px;
 }
@@ -130,17 +135,17 @@
     gap: 8px;
 }
 
-/* Action Plan - IX Card Style */
+/* Action Plan - IX Primary color for D6 corrective action */
 .tree-node__action-plan {
     margin-top: 16px;
     margin-left: 44px;
     padding: 24px;
     background: var(--theme-color-2);
     border-radius: 12px;
-    border: var(--theme-warning-bdr-1);
-    border-left: 4px solid var(--theme-color-warning);
+    border: 1px solid var(--theme-color-primary);
+    border-left: 4px solid var(--theme-color-primary);
     animation: fadeIn var(--theme-medium-time) ease-out;
-    box-shadow: var(--theme-shadow-1);
+    box-shadow: 0 0 0 1px var(--theme-color-primary), var(--theme-shadow-1);
     width: calc(100% - 44px);
     box-sizing: border-box;
 }
@@ -150,13 +155,13 @@
     align-items: center;
     gap: 12px;
     margin-bottom: 16px;
-    color: var(--theme-color-warning);
+    color: var(--theme-color-primary);
     font-weight: 600;
     font-size: 14px;
 }
 
 .tree-node__action-header ix-icon {
-    color: var(--theme-color-warning);
+    color: var(--theme-color-primary);
 }
 
 .tree-node__action-view {
@@ -228,6 +233,7 @@
         opacity: 0;
         transform: translateY(-8px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -236,6 +242,7 @@
 
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
+
     .tree-node,
     .tree-node__action-plan,
     .tree-node__input-container {
@@ -251,31 +258,31 @@
         align-items: flex-start;
         gap: 12px;
     }
-    
+
     .tree-node__description {
         width: 100%;
     }
-    
+
     .tree-node__actions {
         width: 100%;
         justify-content: flex-start;
     }
-    
+
     .tree-node__input-container {
         margin-left: 0;
         width: 100%;
     }
-    
+
     .tree-node__action-plan {
         margin-left: 0;
         width: 100%;
     }
-    
+
     .tree-node__action-view {
         flex-direction: column;
         gap: 12px;
     }
-    
+
     .tree-node__action-view ix-button {
         width: 100%;
     }

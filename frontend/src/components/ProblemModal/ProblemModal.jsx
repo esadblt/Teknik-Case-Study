@@ -7,7 +7,7 @@ import './ProblemModal.css';
  */
 const ModalContent = ({ onClose, onSubmit, initialData }) => {
     const modalRef = useRef(null);
-    
+
     const [formData, setFormData] = useState({
         title: initialData?.title || '',
         description: initialData?.description || '',
@@ -32,24 +32,24 @@ const ModalContent = ({ onClose, onSubmit, initialData }) => {
 
     const validateForm = () => {
         const newErrors = {};
-        
+
         if (!formData.title.trim()) {
             newErrors.title = 'Problem başlığı zorunludur';
         } else if (formData.title.length < 5) {
             newErrors.title = 'Başlık en az 5 karakter olmalıdır';
         }
-        
+
         if (!formData.responsible_person.trim()) {
             newErrors.responsible_person = 'Sorumlu kişi zorunludur';
         }
-        
+
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         if (!validateForm()) {
             return;
         }
@@ -77,7 +77,7 @@ const ModalContent = ({ onClose, onSubmit, initialData }) => {
             <IxModalHeader onCloseClick={handleCancel}>
                 {modalTitle}
             </IxModalHeader>
-            
+
             <IxModalContent>
                 <form id="problem-form" onSubmit={handleSubmit} className="ix-form" noValidate>
                     <IxInput
@@ -119,19 +119,21 @@ const ModalContent = ({ onClose, onSubmit, initialData }) => {
                         label="Termin Tarihi"
                         value={formData.deadline}
                         onValueChange={(e) => handleChange('deadline', e.detail)}
+                        format="DD.MM.YYYY"
+                        i18nPlaceholder="31.12.2025"
                     />
                 </form>
             </IxModalContent>
-            
+
             <IxModalFooter>
-                <IxButton 
+                <IxButton
                     variant="secondary"
                     onClick={handleCancel}
                     disabled={isSubmitting}
                 >
                     İptal
                 </IxButton>
-                <IxButton 
+                <IxButton
                     type="submit"
                     form="problem-form"
                     variant="primary"
@@ -148,7 +150,7 @@ const ModalContent = ({ onClose, onSubmit, initialData }) => {
  * Problem Modal Component - Uses showModal utility
  */
 const ProblemModal = ({ isOpen, onClose, onSubmit, initialData = null }) => {
-    
+
     useEffect(() => {
         if (isOpen) {
             // showModal utility fonksiyonunu kullan

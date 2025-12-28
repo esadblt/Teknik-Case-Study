@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { IxIcon, IxButton, IxIconButton, IxInput, IxTextarea, IxCheckbox } from '@siemens/ix-react';
+import { IxIcon, IxButton, IxIconButton, IxInput, IxTextarea, IxCheckbox, IxTooltip } from '@siemens/ix-react';
 import { iconPlus, iconClose, iconTrashcan, iconSingleCheck, iconBulb, iconPen, iconChevronDown, iconChevronRight } from '@siemens/ix-icons/icons';
 import './TreeNode.css';
 
@@ -10,11 +10,11 @@ import './TreeNode.css';
  * 
  * @component
  */
-const TreeNode = ({ 
-    node, 
-    level = 0, 
-    onAddChild, 
-    onMarkAsRoot, 
+const TreeNode = ({
+    node,
+    level = 0,
+    onAddChild,
+    onMarkAsRoot,
     onActionChange,
     onDelete
 }) => {
@@ -87,7 +87,14 @@ const TreeNode = ({
     const indent = level * 24;
 
     return (
-        <div className="tree-node-wrapper" style={{ marginLeft: `${indent}px` }}>
+        <div
+            className="tree-node-wrapper"
+            style={{ marginLeft: `${indent}px` }}
+            role="treeitem"
+            aria-level={level + 1}
+            aria-expanded={hasChildren ? isExpanded : undefined}
+            aria-labelledby={nodeId}
+        >
             {/* Main Node */}
             <div className={`tree-node ${isRootCause ? 'tree-node--root-cause' : ''}`}>
                 {/* Expand/Collapse Button */}
@@ -117,47 +124,59 @@ const TreeNode = ({
                 </span>
 
                 {/* Actions */}
-                <div className="tree-node__actions">
+                <div className="tree-node__actions" role="group" aria-label="Neden işlemleri">
                     {/* Root Cause Checkbox */}
                     <IxCheckbox
                         checked={isRootCause}
                         onCheckedChange={(e) => onMarkAsRoot(node.id, e.detail)}
                         label="Kök Neden"
+                        aria-describedby={nodeId}
                     />
 
                     {/* Add Child Button */}
                     {!showInput && (
-                        <IxButton
-                            variant="primary"
-                            onClick={handleAddClick}
-                            aria-label="Alt neden ekle"
-                        >
-                            <IxIcon name={iconPlus} size="14" slot="start"></IxIcon>
-                            Neden?
-                        </IxButton>
+                        <>
+                            <IxButton
+                                id={`add-child-btn-${node.id}`}
+                                variant="primary"
+                                onClick={handleAddClick}
+                                aria-label={`"${description}" için alt neden ekle`}
+                            >
+                                <IxIcon name={iconPlus} size="14" slot="start" aria-hidden="true"></IxIcon>
+                                Neden?
+                            </IxButton>
+                            <IxTooltip for={`add-child-btn-${node.id}`}>
+                                5 Neden analizinde bir alt neden ekleyin
+                            </IxTooltip>
+                        </>
                     )}
 
                     {/* Delete Button */}
                     <IxIconButton
+                        id={`delete-btn-${node.id}`}
                         icon={iconTrashcan}
                         size="16"
                         variant="secondary"
                         color="color-alarm"
                         ghost
                         onClick={handleDelete}
-                        aria-label="Sil"
+                        aria-label={`"${description}" nedenini sil`}
                     />
+                    <IxTooltip for={`delete-btn-${node.id}`}>
+                        Bu nedeni ve alt nedenlerini sil
+                    </IxTooltip>
                 </div>
             </div>
 
             {/* Add Child Input */}
             {showInput && (
-                <div className="tree-node__input-container">
+                <div className="tree-node__input-container" role="group" aria-label="Alt neden ekleme formu">
                     <IxInput
                         value={childInput}
                         onValueChange={(e) => setChildInput(e.detail)}
                         onKeyDown={handleKeyPress}
                         placeholder="Bu neden böyle oldu?"
+                        aria-label="Alt neden açıklaması"
                         style={{ flex: 1 }}
                     />
                     <div className="tree-node__input-actions">
@@ -165,6 +184,7 @@ const TreeNode = ({
                             variant="primary"
                             onClick={handleAddChild}
                             disabled={!childInput.trim()}
+                            aria-label="Alt nedeni ekle"
                         >
                             Ekle
                         </IxButton>
@@ -175,8 +195,9 @@ const TreeNode = ({
                                 setShowInput(false);
                                 setChildInput('');
                             }}
+                            aria-label="Alt neden eklemeyi iptal et"
                         >
-                            <IxIcon name={iconClose} size="14" slot="start"></IxIcon>
+                            <IxIcon name={iconClose} size="14" slot="start" aria-hidden="true"></IxIcon>
                             İptal
                         </IxButton>
                     </div>
@@ -185,22 +206,23 @@ const TreeNode = ({
 
             {/* Action Plan (if root cause) */}
             {isRootCause && (
-                <div className="tree-node__action-plan">
+                <div className="tree-node__action-plan" role="region" aria-label="Kalıcı çözüm aksiyonu">
                     <div className="tree-node__action-header">
-                        <IxIcon name={iconBulb} size="16"></IxIcon>
-                        <span>Kalıcı Çözüm Aksiyonu (D6):</span>
+                        <IxIcon name={iconBulb} size="16" aria-hidden="true"></IxIcon>
+                        <span id={`${nodeId}-action-label`}>Kalıcı Çözüm Aksiyonu (D6):</span>
                     </div>
-                    
+
                     {/* View Mode */}
                     {!isEditingAction && actionInput ? (
                         <div className="tree-node__action-view">
                             <p className="tree-node__action-text">{actionInput}</p>
-                            <IxButton 
-                                variant="secondary" 
+                            <IxButton
+                                variant="secondary"
                                 outline
                                 onClick={handleEditAction}
+                                aria-label="Kalıcı çözüm aksiyonunu düzenle"
                             >
-                                <IxIcon name={iconPen} size="14" slot="start"></IxIcon>
+                                <IxIcon name={iconPen} size="14" slot="start" aria-hidden="true"></IxIcon>
                                 Düzenle
                             </IxButton>
                         </div>
@@ -216,7 +238,7 @@ const TreeNode = ({
                                 />
                             </div>
                             <div className="tree-node__action-buttons">
-                                <IxButton 
+                                <IxButton
                                     variant="primary"
                                     onClick={handleActionSave}
                                     disabled={isSaving || !actionInput.trim()}
@@ -225,7 +247,7 @@ const TreeNode = ({
                                     {isSaving ? 'Kaydediliyor...' : 'Kaydet'}
                                 </IxButton>
                                 {node.action_plan && (
-                                    <IxButton 
+                                    <IxButton
                                         variant="secondary"
                                         outline
                                         onClick={handleCancelEdit}
@@ -242,7 +264,7 @@ const TreeNode = ({
 
             {/* Children (Recursive) */}
             {isExpanded && hasChildren && (
-                <div className="tree-node__children">
+                <div className="tree-node__children" role="group" aria-label="Alt nedenler">
                     {node.children.map(child => (
                         <TreeNode
                             key={child.id}
