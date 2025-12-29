@@ -1,24 +1,29 @@
 <?php
-class Database {
+class Database
+{
     private $host;
+    private $port;
     private $db_name;
     private $username;
     private $password;
     private $conn;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->host = getenv('DB_HOST') ?: 'localhost';
+        $this->port = getenv('DB_PORT') ?: '3306';
         $this->db_name = getenv('DB_NAME') ?: '8d_problem_solving';
         $this->username = getenv('DB_USER') ?: 'root';
         $this->password = getenv('DB_PASSWORD') ?: '';
     }
 
-    public function connect() {
+    public function connect()
+    {
         $this->conn = null;
-        
+
         try {
             $this->conn = new PDO(
-                "mysql:host={$this->host};dbname={$this->db_name};charset=utf8mb4",
+                "mysql:host={$this->host};port={$this->port};dbname={$this->db_name};charset=utf8mb4",
                 $this->username,
                 $this->password,
                 [
@@ -27,22 +32,23 @@ class Database {
                     PDO::ATTR_EMULATE_PREPARES => false
                 ]
             );
-        } catch(PDOException $e) {
+        } catch (PDOException $e) {
             error_log("Connection Error: " . $e->getMessage());
             http_response_code(500);
             echo json_encode(['error' => 'Database connection failed']);
             exit;
         }
-        
+
         return $this->conn;
     }
 
-        public function query($sql, $params = []) {
+    public function query($sql, $params = [])
+    {
         try {
             $stmt = $this->conn->prepare($sql);
             $stmt->execute($params);
             return $stmt;
-        } catch(PDOException $e) {
+        } catch (PDOException $e) {
             error_log("Query Error: " . $e->getMessage());
             throw $e;
         }
