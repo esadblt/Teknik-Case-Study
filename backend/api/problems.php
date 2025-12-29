@@ -4,10 +4,10 @@
  * Handles CRUD operations for problems
  */
 
-require_once '../config/cors.php';
-require_once '../config/helpers.php';
-require_once '../config/database.php';
-require_once '../config/migrate.php';
+require_once __DIR__ . '/../config/cors.php';
+require_once __DIR__ . '/../config/helpers.php';
+require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../config/migrate.php';
 
 // Initialize CORS
 handleCors();
