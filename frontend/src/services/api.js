@@ -4,7 +4,11 @@
  * Clean Architecture - Single Responsibility
  */
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost/8d-projects/backend/api';
+// Production URL for Railway, fallback to localhost for development
+const API_URL = import.meta.env.VITE_API_URL ||
+    (window.location.hostname === 'localhost'
+        ? 'http://localhost/8d-projects/backend/api'
+        : 'https://teknik-case-study-production-0076.up.railway.app/api');
 
 /**
  * Custom API Error class for better error handling
