@@ -26,8 +26,8 @@ COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/vite.config.js ./
 
-# Expose port
-EXPOSE 3000
+# Railway uses dynamic PORT
+ENV PORT=3000
 
-# Start preview server
-CMD ["npm", "run", "preview", "--", "--host", "0.0.0.0", "--port", "3000"]
+# Start preview server with Railway's PORT
+CMD npm run preview -- --host 0.0.0.0 --port $PORT
