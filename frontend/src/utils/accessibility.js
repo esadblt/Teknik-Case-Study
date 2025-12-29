@@ -1,10 +1,4 @@
 /**
- * Accessibility Utilities
- * Based on Siemens IX Accessibility Guidelines
- * https://ix.siemens.io/docs/guidelines/accessibility/code
- */
-
-/**
  * Announce a message to screen readers using the live region
  * @param {string} message - Message to announce
  * @param {'polite' | 'assertive'} priority - Announcement priority
