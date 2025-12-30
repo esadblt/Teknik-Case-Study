@@ -1,12 +1,184 @@
 # 8D Problem Çözme Platformu (MVP)
 
-## 1. Proje Özeti
+## 📋 Proje Özeti
 
 Bu proje, üretim hatlarında yaşanan problemleri takip etmek ve kök nedenlerini analiz etmek amacıyla "8D Problem Çözme Metodolojisi"ni dijitalleştirmektedir. Proje, "Problem Tanımlama (D1-D2)" ve "Kök Neden Analizi (D4-D5)" süreçlerini simüle eden bir Full Stack prototip (MVP) olarak geliştirilmiştir.
 
 Çalışma, Siemens iX tasarım sistemine uyum sağlamakta ve PHP ile ilişkisel veri yapılarını (Recursive/Tree Data) modellemektedir.
 
-## 2. Teknoloji Yığını (Tech Stack)
+---
+
+## 🚀 Hızlı Başlangıç (Yerel Kurulum)
+
+### Ön Gereksinimler
+
+Projeyi çalıştırmadan önce aşağıdaki yazılımların yüklü olduğundan emin olun:
+
+| Yazılım | Minimum Versiyon | İndirme Linki |
+|---------|------------------|---------------|
+| **Node.js** | 18.x veya üstü | [nodejs.org](https://nodejs.org/) |
+| **XAMPP** | 8.2.x (PHP 8.2+) | [apachefriends.org](https://www.apachefriends.org/) |
+| **Git** | 2.x | [git-scm.com](https://git-scm.com/) |
+
+> 💡 **Not:** XAMPP, Apache web sunucusu, MySQL veritabanı ve PHP'yi tek pakette içerir.
+
+---
+
+### 📥 Adım 1: Projeyi Klonlayın
+
+1. **Terminali açın** (Windows'ta PowerShell veya Git Bash)
+
+2. **XAMPP htdocs dizinine gidin:**
+   ```bash
+   cd C:\xampp\htdocs
+   ```
+
+3. **Projeyi GitHub'dan klonlayın:**
+   ```bash
+   git clone https://github.com/KULLANICI_ADI/8d-projects.git
+   ```
+   > ⚠️ `KULLANICI_ADI` kısmını kendi GitHub kullanıcı adınızla değiştirin.
+
+4. **Proje dizinine girin:**
+   ```bash
+   cd 8d-projects
+   ```
+
+---
+
+### 🗄️ Adım 2: Veritabanı Kurulumu
+
+1. **XAMPP'ı başlatın:**
+   - XAMPP Control Panel'i açın
+   - **Apache** ve **MySQL** servislerini "Start" butonuna tıklayarak başlatın
+
+2. **phpMyAdmin'e erişin:**
+   - Tarayıcınızda şu adrese gidin: [http://localhost/phpmyadmin](http://localhost/phpmyadmin)
+
+3. **Veritabanı oluşturun:**
+
+   **Yöntem A - SQL Dosyasını İçe Aktarma (Önerilen):**
+   - phpMyAdmin'de "İçe Aktar" (Import) sekmesine tıklayın
+   - `backend/database/schema.sql` dosyasını seçin
+   - "Git" (Go) butonuna tıklayın
+
+   **Yöntem B - Manuel SQL Çalıştırma:**
+   - phpMyAdmin'de "SQL" sekmesine tıklayın
+   - Aşağıdaki SQL komutlarını yapıştırıp çalıştırın:
+
+   ```sql
+   -- Veritabanı oluştur
+   CREATE DATABASE IF NOT EXISTS `8d_problem_solving` 
+   CHARACTER SET utf8mb4 
+   COLLATE utf8mb4_unicode_ci;
+
+   USE `8d_problem_solving`;
+
+   -- Problems tablosu
+   CREATE TABLE IF NOT EXISTS `problems` (
+       `id` INT AUTO_INCREMENT PRIMARY KEY,
+       `title` VARCHAR(255) NOT NULL,
+       `description` TEXT,
+       `responsible` VARCHAR(100),
+       `team` VARCHAR(100),
+       `deadline` DATE,
+       `status` ENUM('open', 'in_progress', 'd4_completed', 'd5_completed', 'closed') DEFAULT 'open',
+       `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+       `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+   -- Root Causes tablosu (5 Neden Analizi)
+   CREATE TABLE IF NOT EXISTS `root_causes` (
+       `id` INT AUTO_INCREMENT PRIMARY KEY,
+       `problem_id` INT NOT NULL,
+       `parent_id` INT DEFAULT NULL,
+       `description` TEXT NOT NULL,
+       `is_root_cause` TINYINT(1) DEFAULT 0,
+       `action_plan` TEXT,
+       `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+       `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+       FOREIGN KEY (`problem_id`) REFERENCES `problems`(`id`) ON DELETE CASCADE,
+       FOREIGN KEY (`parent_id`) REFERENCES `root_causes`(`id`) ON DELETE CASCADE
+   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+   -- Performans için indexler
+   CREATE INDEX idx_problems_status ON problems(status);
+   CREATE INDEX idx_root_causes_problem ON root_causes(problem_id);
+   CREATE INDEX idx_root_causes_parent ON root_causes(parent_id);
+   ```
+
+4. **Veritabanı bağlantısını doğrulayın:**
+   - `8d_problem_solving` veritabanının oluştuğunu kontrol edin
+   - `problems` ve `root_causes` tablolarının listelendiğini görün
+
+---
+
+### ⚙️ Adım 3: Backend Yapılandırması
+
+1. **Veritabanı ayarlarını kontrol edin:**
+
+   `backend/config/database.php` dosyası varsayılan olarak şu ayarları kullanır:
+   
+   | Ayar | Varsayılan Değer |
+   |------|------------------|
+   | Host | `localhost` |
+   | Port | `3306` |
+   | Veritabanı | `8d_problem_solving` |
+   | Kullanıcı | `root` |
+   | Şifre | (boş) |
+
+   > 💡 XAMPP varsayılan kurulumunda bu ayarlar otomatik olarak çalışır.
+
+2. **MySQL şifreniz varsa:**
+   
+   Eğer MySQL root kullanıcısına şifre belirlediyseniz, ortam değişkeni ayarlayabilirsiniz:
+   ```bash
+   # Windows PowerShell
+   $env:DB_PASSWORD="sizin_sifreniz"
+   ```
+
+---
+
+### 🎨 Adım 4: Frontend Kurulumu
+
+1. **Frontend dizinine gidin:**
+   ```bash
+   cd frontend
+   ```
+
+2. **Bağımlılıkları yükleyin:**
+   ```bash
+   npm install
+   ```
+   > Bu işlem ilk seferde birkaç dakika sürebilir.
+
+3. **Geliştirme sunucusunu başlatın:**
+   ```bash
+   npm run dev
+   ```
+
+4. **Uygulamayı açın:**
+   
+   Terminal çıktısında gösterilen adresi tarayıcınızda açın (genellikle):
+   ```
+   http://localhost:5173
+   ```
+
+---
+
+### ✅ Kurulum Tamamlandı!
+
+Şimdi aşağıdaki adresleri kullanabilirsiniz:
+
+| Servis | URL |
+|--------|-----|
+| **Frontend (React)** | http://localhost:5173 |
+| **Backend API** | http://localhost/8d-projects/backend/api/ |
+| **phpMyAdmin** | http://localhost/phpmyadmin |
+
+---
+
+## 🛠️ Teknoloji Yığını (Tech Stack)
 
 ### Frontend
 - **Framework:** React 18
@@ -24,92 +196,35 @@ Bu proje, üretim hatlarında yaşanan problemleri takip etmek ve kök nedenleri
 - **Sistem:** MySQL
 - **Veritabanı Adı:** 8d_problem_solving
 
-## 3. Özellikler
+---
 
-### ✅ Dashboard (Problem Listesi)
-- AG-Grid ile problem listesi (ID, Başlık, Sorumlu, Ekip, Durum, Termin, Tarih)
-- Siemens IX AG-Grid teması ile özelleştirilmiş tablo görünümü
-- Türkçe tarih formatı (GG.AA.YYYY)
-- Responsive tasarım (mobil, tablet, masaüstü)
-- Yeni Problem Ekle modal penceresi
-
-### ✅ Problem Detay Sayfası
-- Problem bilgileri görüntüleme ve düzenleme
-- 8D metodolojisi sekmeleri (Genel Bakış, Kök Neden Analizi)
-- Durum gösterimi (Açık/Kapalı)
-
-### ✅ Kök Neden Analizi (5 Neden - Why-Why)
-- Dinamik ağaç yapısı ile sınırsız derinlik
-- Her düğüme alt neden ekleme
-- Kök neden işaretleme
-- Kalıcı Çözüm Aksiyonu (D6) tanımlama
-- Otomatik durum güncelleme
-
-### ✅ Tema Desteği
-- Aydınlık ve karanlık tema geçişi
-- Sistem tercihini algılama
-- Tema tercihinin localStorage'da saklanması
-
-### ✅ Erişilebilirlik (WCAG AA)
-- Türkçe dil kodu (lang="tr")
-- Skip-to-main-content bağlantısı
-- ARIA etiketleri ve roller
-- Klavye navigasyonu
-- Screen reader desteği
-- Yüksek kontrast modu desteği
-- Hareket azaltma tercihi desteği
-- Tooltip'ler (açıklayıcı ipuçları)
-
-### ✅ Responsive Tasarım
-- Mobil uyumlu (576px altı)
-- Tablet uyumlu (768px altı)
-- Touch cihaz optimizasyonları
-- Safe area inset desteği (notch)
-- Yazdırma stilleri
-
-## 4. Proje Dizin Yapısı
+## 📂 Proje Dizin Yapısı
 
 ```
 8d-projects/
 ├── backend/
 │   ├── api/
-│   │   ├── problems.php
-│   │   └── root_causes.php
-│   └── config/
-│       └── database.php
+│   │   ├── problems.php          # Problem CRUD API
+│   │   └── root_causes.php       # Kök neden API
+│   ├── config/
+│   │   └── database.php          # Veritabanı bağlantısı
+│   └── database/
+│       └── schema.sql            # Veritabanı şeması
 ├── frontend/
 │   ├── public/
 │   │   ├── favicon.svg
 │   │   └── siemens-ag-logo.svg
 │   ├── src/
 │   │   ├── components/
-│   │   │   ├── Dashboard/
-│   │   │   │   ├── Dashboard.jsx
-│   │   │   │   └── Dashboard.css
-│   │   │   ├── ProblemDetail/
-│   │   │   │   ├── ProblemDetail.jsx
-│   │   │   │   └── ProblemDetail.css
-│   │   │   ├── ProblemModal/
-│   │   │   │   ├── ProblemModal.jsx
-│   │   │   │   └── ProblemModal.css
-│   │   │   ├── RootCauseTree/
-│   │   │   │   ├── RootCauseTree.jsx
-│   │   │   │   └── RootCauseTree.css
-│   │   │   └── TreeNode/
-│   │   │       ├── TreeNode.jsx
-│   │   │       └── TreeNode.css
-│   │   ├── services/
-│   │   │   ├── api.js
-│   │   │   ├── problemService.js
-│   │   │   └── rootCauseService.js
-│   │   ├── hooks/
-│   │   │   └── useAlert.js
-│   │   ├── utils/
-│   │   │   ├── toast.js
-│   │   │   └── accessibility.js
+│   │   │   ├── Dashboard/        # Ana sayfa bileşeni
+│   │   │   ├── ProblemDetail/    # Problem detay bileşeni
+│   │   │   ├── ProblemModal/     # Yeni problem modal
+│   │   │   ├── RootCauseTree/    # Kök neden ağacı
+│   │   │   └── TreeNode/         # Ağaç düğüm bileşeni
+│   │   ├── services/             # API servis katmanı
+│   │   ├── hooks/                # Custom React hooks
+│   │   ├── utils/                # Yardımcı fonksiyonlar
 │   │   ├── App.jsx
-│   │   ├── App.css
-│   │   ├── index.css
 │   │   └── main.jsx
 │   ├── index.html
 │   ├── package.json
@@ -117,129 +232,100 @@ Bu proje, üretim hatlarında yaşanan problemleri takip etmek ve kök nedenleri
 └── README.md
 ```
 
-## 5. Kurulum ve Çalıştırma
+---
 
-### Gereksinimler
-- Node.js 18 veya üstü
-- PHP 8.x
-- MySQL 5.7 veya üstü
-- XAMPP veya benzeri yerel sunucu
+## 🔌 API Endpoint'leri
 
-### Veritabanı Kurulumu
-
-1. MySQL'de `8d_problem_solving` adında bir veritabanı oluşturun.
-
-2. Aşağıdaki SQL komutlarını çalıştırın:
-
-```sql
-CREATE DATABASE IF NOT EXISTS 8d_problem_solving;
-USE 8d_problem_solving;
-
-CREATE TABLE problems (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    description TEXT,
-    responsible_person VARCHAR(100) NOT NULL,
-    team VARCHAR(100),
-    deadline DATE,
-    status ENUM('OPEN', 'CLOSED') DEFAULT 'OPEN',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE root_causes (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    problem_id INT NOT NULL,
-    parent_id INT DEFAULT NULL,
-    description TEXT NOT NULL,
-    is_root_cause TINYINT(1) DEFAULT 0,
-    action_plan TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (problem_id) REFERENCES problems(id) ON DELETE CASCADE,
-    FOREIGN KEY (parent_id) REFERENCES root_causes(id) ON DELETE CASCADE
-);
-```
-
-### Backend Kurulumu
-
-1. Proje klasörünü XAMPP htdocs dizinine kopyalayın:
-```
-C:\xampp\htdocs\8d-projects
-```
-
-2. Apache servisini başlatın.
-
-3. `backend/config/database.php` dosyasında veritabanı bilgilerini kontrol edin.
-
-### Frontend Kurulumu
-
-1. Frontend dizinine gidin:
-```bash
-cd frontend
-```
-
-2. Bağımlılıkları yükleyin:
-```bash
-npm install
-```
-
-3. Geliştirme sunucusunu başlatın:
-```bash
-npm run dev
-```
-
-4. Tarayıcıda `http://localhost:5173` adresine gidin.
-
-## 6. API Endpoint'leri
-
-### Problems API (/api/problems.php)
+### Problems API (`/api/problems.php`)
 
 | Method | Endpoint | Açıklama |
 |--------|----------|----------|
-| GET | /api/problems.php | Tüm problemleri listeler |
-| GET | /api/problems.php?id={id} | Belirli bir problemi getirir |
-| POST | /api/problems.php | Yeni problem oluşturur |
-| PUT | /api/problems.php?id={id} | Problemi günceller |
-| DELETE | /api/problems.php?id={id} | Problemi siler |
+| `GET` | `/api/problems.php` | Tüm problemleri listeler |
+| `GET` | `/api/problems.php?id={id}` | Belirli bir problemi getirir |
+| `POST` | `/api/problems.php` | Yeni problem oluşturur |
+| `PUT` | `/api/problems.php?id={id}` | Problemi günceller |
+| `DELETE` | `/api/problems.php?id={id}` | Problemi siler |
 
-### Root Causes API (/api/root_causes.php)
+### Root Causes API (`/api/root_causes.php`)
 
 | Method | Endpoint | Açıklama |
 |--------|----------|----------|
-| GET | /api/root_causes.php?problem_id={id} | Kök neden ağacını getirir |
-| POST | /api/root_causes.php | Yeni kök neden ekler |
-| PUT | /api/root_causes.php | Kök nedeni günceller |
-| DELETE | /api/root_causes.php?id={id} | Kök nedeni siler |
+| `GET` | `/api/root_causes.php?problem_id={id}` | Kök neden ağacını getirir |
+| `POST` | `/api/root_causes.php` | Yeni kök neden ekler |
+| `PUT` | `/api/root_causes.php` | Kök nedeni günceller |
+| `DELETE` | `/api/root_causes.php?id={id}` | Kök nedeni siler |
 
-## 7. Siemens iX Bileşenlerinin Kullanımı
+---
+
+## ✨ Özellikler
+
+### Dashboard (Problem Listesi)
+- AG-Grid ile problem listesi (ID, Başlık, Sorumlu, Ekip, Durum, Termin, Tarih)
+- Siemens IX AG-Grid teması
+- Türkçe tarih formatı (GG.AA.YYYY)
+- Responsive tasarım
+- Yeni Problem Ekle modal penceresi
+
+### Kök Neden Analizi (5 Neden - Why-Why)
+- Hiyerarşik ağaç görselleştirmesi
+- Sınırsız derinlikte alt neden ekleme
+- Kök neden işaretleme
+- Kalıcı Çözüm Aksiyonu (D6) tanımlama
+- Otomatik durum güncelleme
+
+### Tema Desteği
+- Aydınlık ve karanlık tema geçişi
+- Sistem tercihini algılama
+- LocalStorage'da tema saklama
+
+### Erişilebilirlik (WCAG AA)
+- ARIA etiketleri ve roller
+- Klavye navigasyonu
+- Screen reader desteği
+- Yüksek kontrast modu
+
+---
+
+## 🎨 Siemens iX Bileşenleri
 
 | Bileşen | Kullanım Alanı |
 |---------|----------------|
-| IxApplication | Ana uygulama çerçevesi |
-| IxApplicationHeader | Uygulama başlığı ve tema değiştirici |
-| IxMenu, IxMenuItem, IxMenuCategory | Sol navigasyon menüsü |
-| IxContentHeader | Sayfa başlıkları |
-| IxButton, IxIconButton | Butonlar |
-| IxModal, showModal | Modal pencereleri |
-| IxInput, IxTextarea, IxDateInput | Form elemanları |
-| IxPill | Durum göstergeleri |
-| IxCard | Bilgi kartları |
-| IxTabs, IxTabItem | Sekme navigasyonu |
-| IxSpinner | Yükleme göstergesi |
-| IxMessageBar | Bildirim mesajları |
-| IxCheckbox | Onay kutuları |
-| IxTooltip | Açıklayıcı ipuçları |
-| IxIcon | İkonlar |
+| `IxApplication` | Ana uygulama çerçevesi |
+| `IxApplicationHeader` | Başlık ve tema değiştirici |
+| `IxButton`, `IxIconButton` | Butonlar |
+| `IxModal` | Modal pencereleri |
+| `IxInput`, `IxTextarea` | Form elemanları |
+| `IxCheckbox` | Onay kutuları |
+| `IxTooltip` | İpucu metinleri |
+| `IxTabs` | Sekme navigasyonu |
 
-## 8. Erişilebilirlik Özellikleri
+---
 
-Proje, Siemens IX Accessibility Guidelines'a uygun olarak geliştirilmiştir:
+## ❓ Sık Karşılaşılan Sorunlar
 
-- **HTML lang="tr"**: Türkçe dil kodu
-- **Skip Link**: Klavye kullanıcıları için içeriğe atlama
-- **ARIA Labels**: Tüm etkileşimli elementlerde açıklayıcı etiketler
-- **Live Regions**: Dinamik içerik değişiklikleri için screen reader duyuruları
-- **Focus Management**: Görünür focus göstergeleri
-- **Semantic HTML**: Uygun landmark elementleri (main, nav, vb.)
-- **Color Contrast**: WCAG AA standartlarına uygun renk kontrastı
-- **Reduced Motion**: Hareket hassasiyeti olan kullanıcılar için destek
+### "CORS hatası" alıyorum
+- Apache servisinin çalıştığından emin olun
+- Backend API'nin `http://localhost/8d-projects/backend/api/` adresinde erişilebilir olduğunu kontrol edin
 
+### "Veritabanı bağlantı hatası" alıyorum
+- MySQL servisinin XAMPP'ta çalıştığından emin olun
+- `8d_problem_solving` veritabanının oluşturulduğunu kontrol edin
+- phpMyAdmin'de tabloların varlığını doğrulayın
+
+### "npm install" hatası
+- Node.js versiyonunuzu kontrol edin: `node --version` (18.x olmalı)
+- `node_modules` klasörünü silip tekrar deneyin:
+  ```bash
+  rmdir /s /q node_modules
+  npm install
+  ```
+
+### Port 5173 kullanımda
+- Vite farklı bir port seçecektir, terminal çıktısını kontrol edin
+- Veya önceki geliştirme sunucusunu kapatın
+
+---
+
+## 📝 Lisans
+
+Bu proje eğitim amaçlı geliştirilmiştir.
