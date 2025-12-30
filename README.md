@@ -1,80 +1,97 @@
-# 8D Problem Çözme Platformu (MVP)
+# 8D Problem Çözme Platformu
 
-## 📋 Proje Özeti
+## 1. Proje Özeti
 
-Bu proje, üretim hatlarında yaşanan problemleri takip etmek ve kök nedenlerini analiz etmek amacıyla "8D Problem Çözme Metodolojisi"ni dijitalleştirmektedir. Proje, "Problem Tanımlama (D1-D2)" ve "Kök Neden Analizi (D4-D5)" süreçlerini simüle eden bir Full Stack prototip (MVP) olarak geliştirilmiştir.
+Bu proje, üretim hatlarında yaşanan problemleri takip etmek ve kök nedenlerini analiz etmek amacıyla **8D Problem Çözme Metodolojisi**ni dijitalleştirmektedir. Proje, "Problem Tanımlama (D1-D2)" ve "Kök Neden Analizi (D4-D5)" süreçlerini simüle eden bir Full Stack prototip (MVP) olarak geliştirilmiştir.
 
-Çalışma, Siemens iX tasarım sistemine uyum sağlamakta ve PHP ile ilişkisel veri yapılarını (Recursive/Tree Data) modellemektedir.
-
----
-
-## 🚀 Hızlı Başlangıç (Yerel Kurulum)
-
-### Ön Gereksinimler
-
-Projeyi çalıştırmadan önce aşağıdaki yazılımların yüklü olduğundan emin olun:
-
-| Yazılım | Minimum Versiyon | İndirme Linki |
-|---------|------------------|---------------|
-| **Node.js** | 18.x veya üstü | [nodejs.org](https://nodejs.org/) |
-| **XAMPP** | 8.2.x (PHP 8.2+) | [apachefriends.org](https://www.apachefriends.org/) |
-| **Git** | 2.x | [git-scm.com](https://git-scm.com/) |
-
-> 💡 **Not:** XAMPP, Apache web sunucusu, MySQL veritabanı ve PHP'yi tek pakette içerir.
+Çalışma, **Siemens iX Design System** tasarım sistemine uyum sağlamakta ve PHP ile ilişkisel veri yapılarını (Recursive/Tree Data) modellemektedir.
 
 ---
 
-### 📥 Adım 1: Projeyi Klonlayın
+## 2. Teknoloji Yığını
 
-1. **Terminali açın** (Windows'ta PowerShell veya Git Bash)
+### Frontend
+| Teknoloji | Açıklama |
+|-----------|----------|
+| React 18 | UI Framework |
+| Siemens iX React | UI Komponent Kütüphanesi |
+| AG-Grid Community | Tablo Bileşeni |
+| Vite | Build Aracı |
+| React Router DOM | Yönlendirme |
 
-2. **XAMPP htdocs dizinine gidin:**
+### Backend
+| Teknoloji | Açıklama |
+|-----------|----------|
+| PHP 8.x | Sunucu Tarafı Dil |
+| RESTful API | JSON tabanlı API |
+| PDO | Veritabanı Erişimi |
+
+### Veritabanı
+| Teknoloji | Açıklama |
+|-----------|----------|
+| MySQL 5.7+ | İlişkisel Veritabanı |
+| InnoDB | Depolama Motoru |
+
+---
+
+## 3. Yerel Geliştirme Ortamı Kurulumu
+
+### 3.1 Ön Gereksinimler
+
+Aşağıdaki yazılımların sisteminizde kurulu olması gerekmektedir:
+
+| Yazılım | Minimum Versiyon | İndirme Adresi |
+|---------|------------------|----------------|
+| Node.js | 18.x | https://nodejs.org/ |
+| XAMPP | 8.2.x (PHP 8.2+) | https://www.apachefriends.org/ |
+| Git | 2.x | https://git-scm.com/ |
+
+### 3.2 Projeyi Klonlama
+
+1. Terminal veya PowerShell açın.
+
+2. XAMPP htdocs dizinine gidin:
    ```bash
    cd C:\xampp\htdocs
    ```
 
-3. **Projeyi GitHub'dan klonlayın:**
+3. Projeyi klonlayın:
    ```bash
    git clone https://github.com/KULLANICI_ADI/8d-projects.git
    ```
-   > ⚠️ `KULLANICI_ADI` kısmını kendi GitHub kullanıcı adınızla değiştirin.
 
-4. **Proje dizinine girin:**
+4. Proje dizinine girin:
    ```bash
    cd 8d-projects
    ```
 
----
+### 3.3 Veritabanı Kurulumu
 
-### 🗄️ Adım 2: Veritabanı Kurulumu
+1. XAMPP Control Panel üzerinden **Apache** ve **MySQL** servislerini başlatın.
 
-1. **XAMPP'ı başlatın:**
-   - XAMPP Control Panel'i açın
-   - **Apache** ve **MySQL** servislerini "Start" butonuna tıklayarak başlatın
+2. Tarayıcıda phpMyAdmin arayüzüne erişin:
+   ```
+   http://localhost/phpmyadmin
+   ```
 
-2. **phpMyAdmin'e erişin:**
-   - Tarayıcınızda şu adrese gidin: [http://localhost/phpmyadmin](http://localhost/phpmyadmin)
+3. Veritabanı şemasını içe aktarın:
 
-3. **Veritabanı oluşturun:**
-
-   **Yöntem A - SQL Dosyasını İçe Aktarma (Önerilen):**
-   - phpMyAdmin'de "İçe Aktar" (Import) sekmesine tıklayın
+   **Yöntem A - SQL Dosyası İçe Aktarma (Önerilen):**
+   - phpMyAdmin'de "Import" sekmesine tıklayın
    - `backend/database/schema.sql` dosyasını seçin
-   - "Git" (Go) butonuna tıklayın
+   - "Go" butonuna tıklayın
 
    **Yöntem B - Manuel SQL Çalıştırma:**
    - phpMyAdmin'de "SQL" sekmesine tıklayın
-   - Aşağıdaki SQL komutlarını yapıştırıp çalıştırın:
+   - Aşağıdaki komutları çalıştırın:
 
    ```sql
-   -- Veritabanı oluştur
    CREATE DATABASE IF NOT EXISTS `8d_problem_solving` 
    CHARACTER SET utf8mb4 
    COLLATE utf8mb4_unicode_ci;
 
    USE `8d_problem_solving`;
 
-   -- Problems tablosu
    CREATE TABLE IF NOT EXISTS `problems` (
        `id` INT AUTO_INCREMENT PRIMARY KEY,
        `title` VARCHAR(255) NOT NULL,
@@ -87,7 +104,6 @@ Projeyi çalıştırmadan önce aşağıdaki yazılımların yüklü olduğundan
        `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-   -- Root Causes tablosu (5 Neden Analizi)
    CREATE TABLE IF NOT EXISTS `root_causes` (
        `id` INT AUTO_INCREMENT PRIMARY KEY,
        `problem_id` INT NOT NULL,
@@ -101,129 +117,87 @@ Projeyi çalıştırmadan önce aşağıdaki yazılımların yüklü olduğundan
        FOREIGN KEY (`parent_id`) REFERENCES `root_causes`(`id`) ON DELETE CASCADE
    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-   -- Performans için indexler
    CREATE INDEX idx_problems_status ON problems(status);
    CREATE INDEX idx_root_causes_problem ON root_causes(problem_id);
    CREATE INDEX idx_root_causes_parent ON root_causes(parent_id);
    ```
 
-4. **Veritabanı bağlantısını doğrulayın:**
+4. Kurulumu doğrulayın:
    - `8d_problem_solving` veritabanının oluştuğunu kontrol edin
-   - `problems` ve `root_causes` tablolarının listelendiğini görün
+   - `problems` ve `root_causes` tablolarının varlığını doğrulayın
 
----
+### 3.4 Backend Yapılandırması
 
-### ⚙️ Adım 3: Backend Yapılandırması
+`backend/config/database.php` dosyası aşağıdaki varsayılan değerleri kullanır:
 
-1. **Veritabanı ayarlarını kontrol edin:**
+| Parametre | Varsayılan Değer |
+|-----------|------------------|
+| DB_HOST | localhost |
+| DB_PORT | 3306 |
+| DB_NAME | 8d_problem_solving |
+| DB_USER | root |
+| DB_PASSWORD | (boş) |
 
-   `backend/config/database.php` dosyası varsayılan olarak şu ayarları kullanır:
-   
-   | Ayar | Varsayılan Değer |
-   |------|------------------|
-   | Host | `localhost` |
-   | Port | `3306` |
-   | Veritabanı | `8d_problem_solving` |
-   | Kullanıcı | `root` |
-   | Şifre | (boş) |
+XAMPP varsayılan kurulumunda ek yapılandırma gerekmez. Farklı bir MySQL şifresi kullanıyorsanız ortam değişkenlerini ayarlayın.
 
-   > 💡 XAMPP varsayılan kurulumunda bu ayarlar otomatik olarak çalışır.
+### 3.5 Frontend Kurulumu
 
-2. **MySQL şifreniz varsa:**
-   
-   Eğer MySQL root kullanıcısına şifre belirlediyseniz, ortam değişkeni ayarlayabilirsiniz:
-   ```bash
-   # Windows PowerShell
-   $env:DB_PASSWORD="sizin_sifreniz"
-   ```
-
----
-
-### 🎨 Adım 4: Frontend Kurulumu
-
-1. **Frontend dizinine gidin:**
+1. Frontend dizinine gidin:
    ```bash
    cd frontend
    ```
 
-2. **Bağımlılıkları yükleyin:**
+2. Bağımlılıkları yükleyin:
    ```bash
    npm install
    ```
-   > Bu işlem ilk seferde birkaç dakika sürebilir.
 
-3. **Geliştirme sunucusunu başlatın:**
+3. Geliştirme sunucusunu başlatın:
    ```bash
    npm run dev
    ```
 
-4. **Uygulamayı açın:**
-   
-   Terminal çıktısında gösterilen adresi tarayıcınızda açın (genellikle):
+4. Uygulamaya erişin:
    ```
    http://localhost:5173
    ```
 
----
-
-### ✅ Kurulum Tamamlandı!
-
-Şimdi aşağıdaki adresleri kullanabilirsiniz:
+### 3.6 Erişim Adresleri
 
 | Servis | URL |
 |--------|-----|
-| **Frontend (React)** | http://localhost:5173 |
-| **Backend API** | http://localhost/8d-projects/backend/api/ |
-| **phpMyAdmin** | http://localhost/phpmyadmin |
+| Frontend | http://localhost:5173 |
+| Backend API | http://localhost/8d-projects/backend/api/ |
+| phpMyAdmin | http://localhost/phpmyadmin |
 
 ---
 
-## 🛠️ Teknoloji Yığını (Tech Stack)
-
-### Frontend
-- **Framework:** React 18
-- **UI Kütüphanesi:** Siemens iX Design System (@siemens/ix-react)
-- **Tablo Bileşeni:** AG-Grid Community + Siemens IX AG-Grid Theme
-- **Build Aracı:** Vite
-- **Yönlendirme:** React Router DOM
-
-### Backend
-- **Dil:** PHP 8.x (Native)
-- **API:** RESTful JSON API
-- **Güvenlik:** Prepared Statements, Input Validation, CORS Headers
-
-### Veritabanı
-- **Sistem:** MySQL
-- **Veritabanı Adı:** 8d_problem_solving
-
----
-
-## 📂 Proje Dizin Yapısı
+## 4. Proje Dizin Yapısı
 
 ```
 8d-projects/
 ├── backend/
 │   ├── api/
-│   │   ├── problems.php          # Problem CRUD API
-│   │   └── root_causes.php       # Kök neden API
+│   │   ├── problems.php
+│   │   └── root_causes.php
 │   ├── config/
-│   │   └── database.php          # Veritabanı bağlantısı
+│   │   └── database.php
 │   └── database/
-│       └── schema.sql            # Veritabanı şeması
+│       └── schema.sql
 ├── frontend/
 │   ├── public/
 │   │   ├── favicon.svg
 │   │   └── siemens-ag-logo.svg
 │   ├── src/
 │   │   ├── components/
-│   │   │   ├── Dashboard/        # Ana sayfa bileşeni
-│   │   │   ├── ProblemDetail/    # Problem detay bileşeni
-│   │   │   ├── ProblemModal/     # Yeni problem modal
-│   │   │   ├── RootCauseTree/    # Kök neden ağacı
-│   │   │   └── TreeNode/         # Ağaç düğüm bileşeni
-│   │   ├── services/             # API servis katmanı
-│   │   ├── hooks/                # Custom React hooks
-│   │   ├── utils/                # Yardımcı fonksiyonlar
+│   │   │   ├── Dashboard/
+│   │   │   ├── ProblemDetail/
+│   │   │   ├── ProblemModal/
+│   │   │   ├── RootCauseTree/
+│   │   │   └── TreeNode/
+│   │   ├── services/
+│   │   ├── hooks/
+│   │   ├── utils/
 │   │   ├── App.jsx
 │   │   └── main.jsx
 │   ├── index.html
@@ -234,98 +208,91 @@ Projeyi çalıştırmadan önce aşağıdaki yazılımların yüklü olduğundan
 
 ---
 
-## 🔌 API Endpoint'leri
+## 5. API Dokümantasyonu
 
-### Problems API (`/api/problems.php`)
+### 5.1 Problems API
 
-| Method | Endpoint | Açıklama |
-|--------|----------|----------|
-| `GET` | `/api/problems.php` | Tüm problemleri listeler |
-| `GET` | `/api/problems.php?id={id}` | Belirli bir problemi getirir |
-| `POST` | `/api/problems.php` | Yeni problem oluşturur |
-| `PUT` | `/api/problems.php?id={id}` | Problemi günceller |
-| `DELETE` | `/api/problems.php?id={id}` | Problemi siler |
-
-### Root Causes API (`/api/root_causes.php`)
+**Endpoint:** `/api/problems.php`
 
 | Method | Endpoint | Açıklama |
 |--------|----------|----------|
-| `GET` | `/api/root_causes.php?problem_id={id}` | Kök neden ağacını getirir |
-| `POST` | `/api/root_causes.php` | Yeni kök neden ekler |
-| `PUT` | `/api/root_causes.php` | Kök nedeni günceller |
-| `DELETE` | `/api/root_causes.php?id={id}` | Kök nedeni siler |
+| GET | `/api/problems.php` | Tüm problemleri listeler |
+| GET | `/api/problems.php?id={id}` | Belirli bir problemi getirir |
+| POST | `/api/problems.php` | Yeni problem oluşturur |
+| PUT | `/api/problems.php?id={id}` | Problemi günceller |
+| DELETE | `/api/problems.php?id={id}` | Problemi siler |
+
+### 5.2 Root Causes API
+
+**Endpoint:** `/api/root_causes.php`
+
+| Method | Endpoint | Açıklama |
+|--------|----------|----------|
+| GET | `/api/root_causes.php?problem_id={id}` | Kök neden ağacını getirir |
+| POST | `/api/root_causes.php` | Yeni kök neden ekler |
+| PUT | `/api/root_causes.php` | Kök nedeni günceller |
+| DELETE | `/api/root_causes.php?id={id}` | Kök nedeni siler |
 
 ---
 
-## ✨ Özellikler
+## 6. Uygulama Özellikleri
 
-### Dashboard (Problem Listesi)
-- AG-Grid ile problem listesi (ID, Başlık, Sorumlu, Ekip, Durum, Termin, Tarih)
-- Siemens IX AG-Grid teması
-- Türkçe tarih formatı (GG.AA.YYYY)
+### 6.1 Dashboard
+- AG-Grid tabanlı problem listesi
+- Siemens IX tema entegrasyonu
 - Responsive tasarım
-- Yeni Problem Ekle modal penceresi
+- Problem ekleme modal penceresi
 
-### Kök Neden Analizi (5 Neden - Why-Why)
-- Hiyerarşik ağaç görselleştirmesi
+### 6.2 Kök Neden Analizi (5 Neden)
+- Hiyerarşik ağaç görselleştirmesi (Recursive Tree)
 - Sınırsız derinlikte alt neden ekleme
 - Kök neden işaretleme
 - Kalıcı Çözüm Aksiyonu (D6) tanımlama
-- Otomatik durum güncelleme
 
-### Tema Desteği
-- Aydınlık ve karanlık tema geçişi
+### 6.3 Tema Desteği
+- Aydınlık/Karanlık tema geçişi
 - Sistem tercihini algılama
-- LocalStorage'da tema saklama
+- LocalStorage ile kalıcılık
 
-### Erişilebilirlik (WCAG AA)
+### 6.4 Erişilebilirlik (WCAG AA)
 - ARIA etiketleri ve roller
 - Klavye navigasyonu
 - Screen reader desteği
-- Yüksek kontrast modu
 
 ---
 
-## 🎨 Siemens iX Bileşenleri
+## 7. Siemens iX Bileşenleri
 
 | Bileşen | Kullanım Alanı |
 |---------|----------------|
-| `IxApplication` | Ana uygulama çerçevesi |
-| `IxApplicationHeader` | Başlık ve tema değiştirici |
-| `IxButton`, `IxIconButton` | Butonlar |
-| `IxModal` | Modal pencereleri |
-| `IxInput`, `IxTextarea` | Form elemanları |
-| `IxCheckbox` | Onay kutuları |
-| `IxTooltip` | İpucu metinleri |
-| `IxTabs` | Sekme navigasyonu |
+| IxApplication | Ana uygulama çerçevesi |
+| IxApplicationHeader | Başlık ve tema değiştirici |
+| IxButton, IxIconButton | Butonlar |
+| IxModal | Modal pencereleri |
+| IxInput, IxTextarea | Form elemanları |
+| IxCheckbox | Onay kutuları |
+| IxTooltip | İpucu metinleri |
+| IxTabs | Sekme navigasyonu |
+| IxPill | Durum göstergeleri |
 
 ---
 
-## ❓ Sık Karşılaşılan Sorunlar
+## 8. Sorun Giderme
 
-### "CORS hatası" alıyorum
-- Apache servisinin çalıştığından emin olun
-- Backend API'nin `http://localhost/8d-projects/backend/api/` adresinde erişilebilir olduğunu kontrol edin
-
-### "Veritabanı bağlantı hatası" alıyorum
-- MySQL servisinin XAMPP'ta çalıştığından emin olun
+### Veritabanı Bağlantı Hatası
+- XAMPP'ta MySQL servisinin çalıştığını doğrulayın
 - `8d_problem_solving` veritabanının oluşturulduğunu kontrol edin
-- phpMyAdmin'de tabloların varlığını doğrulayın
 
-### "npm install" hatası
-- Node.js versiyonunuzu kontrol edin: `node --version` (18.x olmalı)
-- `node_modules` klasörünü silip tekrar deneyin:
-  ```bash
-  rmdir /s /q node_modules
-  npm install
-  ```
+### CORS Hatası
+- Apache servisinin çalıştığından emin olun
+- Backend API erişilebilirliğini test edin
 
-### Port 5173 kullanımda
-- Vite farklı bir port seçecektir, terminal çıktısını kontrol edin
-- Veya önceki geliştirme sunucusunu kapatın
+### npm install Hatası
+- Node.js versiyonunu kontrol edin: `node --version`
+- `node_modules` klasörünü silip yeniden kurun
 
 ---
 
-## 📝 Lisans
+## 9. Lisans
 
-Bu proje eğitim amaçlı geliştirilmiştir.
+Bu proje, Siemens Teknik Değerlendirme kapsamında geliştirilmiştir.
